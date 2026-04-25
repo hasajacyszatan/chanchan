@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>12chan</title>
+    <title>ukenchan</title>
     <style>
         header {
             background-color: gray;
@@ -11,18 +11,28 @@
             font-family: monospace;
         }
         body{
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: darkgrey;
             margin: 0 !important;
             padding: 0 !important;
         }
         .post{
-            background-color: darkkhaki;
+            border: solid 3px darkgoldenrod;
+            background-color: lightgray;
+            padding: 5px;
             width: 80%;
             height: 200px;
             margin: 20px;
 
         }
-        .posts{
-            display:flex ;
+        .created_at{
+            float: right;
+        }
+        .reply{
+            margin: 4px;
+            padding: 5px;
+            border: solid 1px whitesmoke;
+            background-color: gainsboro;
         }
     </style>
 </head>
@@ -35,11 +45,21 @@
     </header>
     <div class="posts">
     {%for i in posts%}
-    <pre class="post">
-        <b>{{i.title}}</b>
+    <div class="post">
+        <b class="title">{{i.title}}</b>
+        <b class="created_at">
+            {{i.created_at}}
+        </b>
         <br>
         {{i.content}}
-    </pre>
+        <div class="replies">
+            {%for reply in i.reply_set.all %}
+                <div class="reply">
+                    {{reply.content}}
+                </div>
+            {%endfor%}
+        </div>
+    </div>
     {%endfor%}
     </div>
 </body>
