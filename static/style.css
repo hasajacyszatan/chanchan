@@ -18,8 +18,8 @@ body {
     border: solid 3px darkgoldenrod;
     background-color: lightgray;
     padding: 5px;
-    width: 80%;
-    margin: 20px;
+    width: 70%;
+    margin: 5px;
 }
 
 .created_at {
@@ -63,7 +63,9 @@ details > summary::before {
 details[open] > summary::before {
     content: "−";
 }
-
+.postform {
+    margin-top: 20px;
+}
 .postform form {
     display: flex;
     flex-direction: column;
@@ -81,7 +83,12 @@ details[open] > summary::before {
     border: 1px solid darkgoldenrod;
     box-sizing: border-box;
 }
-
+.posts {
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .postform form textarea {
     min-height: 100px;
     resize: vertical;
