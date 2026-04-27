@@ -35,3 +35,21 @@ body{
 .login{
     float: right;
 }
+.postform form input, .postform form textarea {
+    margin-left: 30%;
+    margin-right: 30%;
+    flex:100%;
+}
+.postform form{
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    align-content: center   ;
+}
+details > summary {
+  width: 100px;
+  padding: 10px;
+  background-color: white;
+  user-select: none;
+  list-style: none;
+}

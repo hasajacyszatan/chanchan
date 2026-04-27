@@ -3,6 +3,23 @@
 {% block title %}Strona główna{% endblock %}
 
 {% block content %}
+
+<div class="postform">
+    <details>
+    <summary>dodaj post</summary>
+<form action="/post/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="text" name="title">
+    <textarea name="content"></textarea>
+
+    <input type="hidden" name="section_id" value="{{ section.id }}">
+
+    <input type="file" name="file">
+
+    <button type="submit">Dodaj</button>
+</form>    </details>
+</div>
 <div class="posts">
     {% for i in posts %}
     <div class="post">
