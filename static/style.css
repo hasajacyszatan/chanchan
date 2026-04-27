@@ -1,0 +1,37 @@
+header {
+    background-color: gray;
+    width: 100%;
+    font-size: 14px;
+    font-family: monospace;
+}
+body{
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: darkgrey;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.post{
+    border: solid 3px darkgoldenrod;
+    background-color: lightgray;
+    padding: 5px;
+    width: 80%;
+    min-height: 200px;
+    margin: 20px;
+
+}
+.created_at{
+    float: right;
+}
+.images img {
+    border: double;
+    height: 100px;
+}
+.reply{
+    margin: 4px;
+    padding: 5px;
+    border: solid 1px whitesmoke;
+    background-color: gainsboro;
+}
+.login{
+    float: right;
+}

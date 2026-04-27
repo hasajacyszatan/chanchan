@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <title>{% block title %}ukenchan{% endblock %}</title>
+</head>
+<body>
+    <header>
+        działy: 
+        {% for section in sections %}
+            <a href="/section/{{section.name}}">{{section.name}}</a>, 
+        {% endfor %}
+        <span class="login">
+            <a href="/login">login</a>
+            <a href="/register">register</a>
+        </span>
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        document.querySelectorAll('.images img').forEach(img => {
+            img.addEventListener('click', () => {
+                if (img.style.width) {
+                    img.style.width = '';
+                    img.style.height = '';
+                } else {
+                    img.style.width = img.naturalWidth + 'px';
+                    img.style.height = img.naturalHeight + 'px';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

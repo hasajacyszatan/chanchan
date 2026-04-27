@@ -1,66 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends "base.html" %}
 
-    <title>ukenchan</title>
-    <style>
-        header {
-            background-color: gray;
-            width: 100%;
-            font-size: 14px;
-            font-family: monospace;
-        }
-        body{
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: darkgrey;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .post{
-            border: solid 3px darkgoldenrod;
-            background-color: lightgray;
-            padding: 5px;
-            width: 80%;
-            height: 200px;
-            margin: 20px;
+{% block title %}Strona główna{% endblock %}
 
-        }
-        .created_at{
-            float: right;
-        }
-        .reply{
-            margin: 4px;
-            padding: 5px;
-            border: solid 1px whitesmoke;
-            background-color: gainsboro;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        działy: 
-        {%for section in sections%}
-            <a href="/section/{{section.name}}">{{section.name}}</a>, 
-        {%endfor%}
-    </header>
-    <div class="posts">
-    {%for i in posts%}
+{% block content %}
+<div class="posts">
+    {% for i in posts %}
     <div class="post">
-        <b class="title">{{i.title}}</b>
-        <b class="created_at">
-            {{i.created_at}}
-        </b>
-        <br>
-        {{i.content}}
+        <div class="content">
+            <b class="title">{{i.title}}</b>
+            <b class="created_at">
+                id: {{i.id}} 
+                {{i.created_at}}
+            </b>
+            <br>
+            {{i.content}}
+        </div>
+
+        <div class="images">
+            {% for image in i.images.all %}
+                <img src="{{image.image_path}}">
+            {% endfor %}
+        </div>
+
         <div class="replies">
-            {%for reply in i.reply_set.all %}
+            {% for reply in i.reply_set.all %}
                 <div class="reply">
+
+                    <div class="images">
+                        {% for image in reply.images.all %}
+                            <img src="{{image.image_path}}">
+                        {% endfor %}
+                    </div>
+
                     {{reply.content}}
                 </div>
-            {%endfor%}
+            {% endfor %}
         </div>
     </div>
-    {%endfor%}
-    </div>
-</body>
-</html>
+    {% endfor %}
+</div>
+{% endblock %}
