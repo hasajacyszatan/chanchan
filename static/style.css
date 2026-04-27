@@ -4,7 +4,9 @@ header {
     font-size: 14px;
     font-family: monospace;
 }
-
+header .menu{
+    padding: 10px;
+}
 body {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     background-color: darkgrey;
