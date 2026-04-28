@@ -18,7 +18,7 @@
         </form>
     </details>
 </div>
-
+    {%if posts|length%}
     {% for i in posts %}
     <div class="post">
         <div class="postcontainer">        
@@ -60,5 +60,10 @@
         {%endif%}
     </div>
     {% endfor %}
+    {%else%}
+    <div class="post">
+    there are no posts in this board
+    </div>
+    {%endif%}
 </div>
 {% endblock %}

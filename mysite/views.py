@@ -15,7 +15,6 @@ def index(request):
 def section(request, dzial):
     section = Section.objects.get(name=dzial)
     posts = Post.objects.filter(section=section.id)
-    print(posts[0].images)
     return render(request, 'index.html', {'posts': posts, "section": section})
 def submitpost(request):
     print(request.FILES)
