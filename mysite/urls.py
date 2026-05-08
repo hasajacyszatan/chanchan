@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from .views import *  # jeśli w tym samym katalogu
 
 urlpatterns = [
@@ -9,4 +9,5 @@ urlpatterns = [
     path('submitpost/', submitpost),
     path('post/<int:post_id>', post),
     path('submitreply/<int:post_id>', submitreply),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
