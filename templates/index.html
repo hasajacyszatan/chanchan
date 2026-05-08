@@ -7,13 +7,14 @@
 <div class="posts">
 <div class="postform">
     <details>
-        <summary>dodaj post</summary>
+        <summary>dodaj post (wersja)</summary>
         <form action="/submitpost/" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="text" name="title" placeholder="Tytuł...">
             <textarea name="content" placeholder="Treść posta..."></textarea>
-            <input type="hidden" name="section_id" value="{{ section.id }}">
-            <input type="file" name="file">
+            <input type="hidden" name="section_id" value="{{ 1 }}">
+            <input type="file" name="file" id="wybor-zdjecia">
+            <img id="podglad" src="#" alt="Podgląd zdjęcia" style="display: none; max-width: 200px; max-height: 200px; object-fit: cover; margin-top: 10px; border: 2px solid #d4a017; border-radius: 8px;">
             <button type="submit">Dodaj</button>
         </form>
     </details>
@@ -66,4 +67,16 @@
     </div>
     {%endif%}
 </div>
+<script>
+    const inputZdjęcia = document.getElementById('wybor-zdjecia');
+    const podglądZdjęcia = document.getElementById('podglad');
+
+    inputZdjęcia.onchange = evt => {
+        const [file] = inputZdjęcia.files;
+        if (file) {
+            podglądZdjęcia.src = URL.createObjectURL(file);
+            podglądZdjęcia.style.display = 'block';
+        }
+    }
+</script>
 {% endblock %}
