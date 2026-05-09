@@ -15,7 +15,7 @@
             <a href="/accounts/register">register</a>
             {%else%}
             {{ user.username }}
-            <form style="display: inline;" action="/accounts/logout/" method="POST"><button type="submit">Logout</button></form>
+            <form style="display: inline;" action="/accounts/logout/" method="POST">{% csrf_token %}<button type="submit">Logout</button></form>
             {%endif%}
 
         </span>
