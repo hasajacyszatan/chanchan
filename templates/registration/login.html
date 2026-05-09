@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Logowanie</title>
-</head>
-<body>
-
-<h1>Logowanie</h1>
+{% extends "base.html" %}
+{% block content %}
 
 <form method="post">
     {% csrf_token %}
@@ -14,5 +8,4 @@
     <button type="submit">Zaloguj</button>
 </form>
 
-</body>
-</html>
+{% endblock %}

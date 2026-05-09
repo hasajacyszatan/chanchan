@@ -8,14 +8,13 @@ def render(request, template_name, context=None):
 
     context['sections'] = Section.objects.all()
     return django_render(request, template_name, context)
-
 def index(request):
     posts = Post.objects.all()
     return render(request, 'index.html', {'posts': posts})
 def section(request, dzial):
     section = Section.objects.get(name=dzial)
     posts = Post.objects.filter(section=section.id)
-    return render(request, 'index.html', {'posts': posts, "section": section})
+    return render(request, 'board.html', {'posts': posts, "section": section})
 def submitpost(request):
     print(request.FILES)
     uploaded_file = request.FILES.get('file')

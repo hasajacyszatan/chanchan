@@ -1,0 +1,11 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: skyblue;
+}
+.board{
+	
+}
+.headercontainer{
+	display: flex;
+	justify-content: center;
+}

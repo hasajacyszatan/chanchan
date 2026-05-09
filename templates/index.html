@@ -1,82 +1,31 @@
-{% extends "base.html" %}
-
-{% block title %}Strona główna{% endblock %}
-
-{% block content %}
-
-<div class="posts">
-<div class="postform">
-    <details>
-        <summary>dodaj post (wersja)</summary>
-        <form action="/submitpost/" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="text" name="title" placeholder="Tytuł...">
-            <textarea name="content" placeholder="Treść posta..."></textarea>
-            <input type="hidden" name="section_id" value="{{ 1 }}">
-            <input type="file" name="file" id="wybor-zdjecia">
-            <img id="podglad" src="#" alt="Podgląd zdjęcia" style="display: none; max-width: 200px; max-height: 200px; object-fit: cover; margin-top: 10px; border: 2px solid #d4a017; border-radius: 8px;">
-            <button type="submit">Dodaj</button>
-        </form>
-    </details>
-</div>
-    {%if posts|length%}
-    {% for i in posts %}
-    <div class="post">
-        <div class="postcontainer">        
-        <div class="images">
-            {% for image in i.images.all %}
-                <img src="{{image.image_path}}">
-            {% endfor %}
-        </div>
-
-        <div class="content">
-            <b class="title">{{i.title}}</b>
-            <b class="created_at">
-                <a href="/post/{{i.id}}">Reply</a>
-                id: {{i.id}} 
-                {{i.created_at}}
-            </b>
-            <br>
-            {{i.content}}
-        </div>
-        </div>
-        {%if i.reply_set.all|length%}
-        <details>
-        <summary>Replies</summary>
-        <div class="replies">
-            {% for reply in i.reply_set.all %}
-                <div class="reply postcontainer">
-                    <div class="images">
-                        {% for image in reply.images.all %}
-                            <img src="{{image.image_path}}">
-                        {% endfor %}
-                    </div>
-                    <div class="content">
-                    {{reply.content}}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        </details>
-        {%endif%}
-    </div>
-    {% endfor %}
-    {%else%}
-    <div class="post">
-    there are no posts in this board
-    </div>
-    {%endif%}
-</div>
-<script>
-    const inputZdjęcia = document.getElementById('wybor-zdjecia');
-    const podglądZdjęcia = document.getElementById('podglad');
-
-    inputZdjęcia.onchange = evt => {
-        const [file] = inputZdjęcia.files;
-        if (file) {
-            podglądZdjęcia.src = URL.createObjectURL(file);
-            podglądZdjęcia.style.display = 'block';
-        }
-    }
-</script>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="/static/indexstyle.css">
+</head>
+<body>
+	<div class="headercontainer">
+	<header>
+	<img src="/static/logo.png" alt="">
+	</header>
+	</div>
+	<div>
+		<a href="/accounts/login">Logowanie</a>
+		<a href="/accounts/register">Rejestracja</a>
+		<h3>Dostępne działy</h3>
+		<hr>
+		{%for i in sections%}
+			<div class="board">
+				<a href="/section/{{i.name}}">
+			<b>{{i.name}}</b>
+			 - {{i.description}}
+			 	</a>
+			 </div>
+			<hr/>
+		{%endfor%}
+	</div>
+</body>
+</html>
