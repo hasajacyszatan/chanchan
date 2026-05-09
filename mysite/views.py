@@ -2,12 +2,27 @@ from posty.models import Post
 from posty.models import *
 from django.shortcuts import render as django_render
 from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm
+
 def render(request, template_name, context=None):
     if context is None:
         context = {}
 
     context['sections'] = Section.objects.all()
     return django_render(request, template_name, context)
+
+
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+    else:
+        form = UserCreationForm()
+
+    return render(request, "registration/register.html", {"form": form})
 def index(request):
     posts = Post.objects.all()
     return render(request, 'index.html', {'posts': posts})
@@ -21,6 +36,8 @@ def submitpost(request):
     title = request.POST.get("title")
     content = request.POST.get("content")
     section_id = request.POST.get("section_id")
+    userid = request.POST.get("userid")
+    print("to jest userid", userid)
     section = Section.objects.get(id=section_id)
     newpost = Post(title = title, content = content, section = section)
     newpost.save()
@@ -31,7 +48,7 @@ def submitpost(request):
                 destination.write(chunk)
         image = Image(image_path = '/static/images/'+uploaded_file.name, post = newpost)
         image.save()
-    return redirect('/')
+    return redirect('/section/'+section.name)
 def submitreply(request, post_id):
     post = Post.objects.filter(id=post_id)[0]
     content = request.POST.get("content")

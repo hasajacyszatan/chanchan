@@ -10,4 +10,5 @@ urlpatterns = [
     path('post/<int:post_id>', post),
     path('submitreply/<int:post_id>', submitreply),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register', register),
 ]

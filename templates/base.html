@@ -10,8 +10,14 @@
         <div class="menu">działy: 
         {% for section in sections %}<a href="/section/{{section.name}}">{{section.name}}</a>/{% endfor %}
         <span class="login">
+            {%if not user.username%}
             <a href="/accounts/login">login</a>
-            <a href="/accounts/login">register</a>
+            <a href="/accounts/register">register</a>
+            {%else%}
+            {{ user.username }}
+            <form style="display: inline;" action="/accounts/logout/" method="POST"><button type="submit">Logout</button></form>
+            {%endif%}
+
         </span>
         </div>
     </header>
