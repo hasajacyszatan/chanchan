@@ -28,7 +28,7 @@ def index(request):
     return render(request, 'index.html', {'posts': posts})
 def section(request, dzial):
     section = Section.objects.get(name=dzial)
-    posts = Post.objects.filter(section=section.id)
+    posts = Post.objects.filter(section=section.id).order_by('-id')
     return render(request, 'board.html', {'posts': posts, "section": section})
 def submitpost(request):
     print(request.FILES)
