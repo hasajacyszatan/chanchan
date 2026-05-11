@@ -31,13 +31,16 @@
         </div>
 
         <div class="content">
-            <b class="title">{{i.title}}</b>
+            <b class="title">
+                {{i.title}} 
+                <span class="user">{{i.user}}</span>
+            </b>
             <b class="created_at">
                 <a href="/post/{{i.id}}">Reply</a>
                 id: {{i.id}} 
                 {{i.created_at}}
             </b>
-            <br>
+            <hr>
             {{i.content}}
         </div>
         </div>

@@ -3,7 +3,7 @@ from posty.models import *
 from django.shortcuts import render as django_render
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.models import User
 def render(request, template_name, context=None):
     if context is None:
         context = {}
@@ -37,9 +37,9 @@ def submitpost(request):
     content = request.POST.get("content")
     section_id = request.POST.get("section_id")
     userid = request.POST.get("userid")
-    print("to jest userid", userid)
+    user = User.objects.get(id=userid)
     section = Section.objects.get(id=section_id)
-    newpost = Post(title = title, content = content, section = section)
+    newpost = Post(title = title, content = content, section = section, user = user)
     newpost.save()
     if uploaded_file:
         print("dostano plik")
