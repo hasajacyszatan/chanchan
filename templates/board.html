@@ -14,7 +14,7 @@
             <textarea name="content" placeholder="Treść posta..."></textarea>
             <input type="hidden" name="section_id" value="{{ 1 }}">
             <input type="hidden" name="userid" value="{{ user.id }}">
-            <input type="file" name="file" id="wybor-zdjecia">
+            <input type="file" name="file" id="wybor-zdjecia" accept="image/*">
             <img id="podglad" src="#" alt="Podgląd zdjęcia" style="display: none; max-width: 200px; max-height: 200px; object-fit: cover; margin-top: 10px; border: 2px solid #d4a017; border-radius: 8px;">
             <button type="submit">Dodaj</button>
         </form>
