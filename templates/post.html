@@ -52,7 +52,7 @@
             {% csrf_token %}
             <textarea name="content" placeholder="Treść posta..."></textarea>
             <input type="hidden" name="section_id" value="{{ section.id }}">
-            <input type="file" name="file">
+            <input type="file" name="file" accept="image/*">
             <button type="submit">Dodaj</button>
         </form>
     </details>
