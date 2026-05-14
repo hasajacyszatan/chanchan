@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class Section(models.Model):
+    image_path = models.CharField(max_length=500, null=True, blank=True)
     name = models.CharField(max_length=200)
     description = models.TextField()
 

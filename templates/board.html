@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block title %}Strona główna{% endblock %}
-
+{% block header %}
+    <div class="headerinfo">
+    {%if section.image_path%}
+    <div><img src="{{section.image_path}}"></div>
+    {%endif%}
+    <span>{{section.description}}</span>
+    </div>
+{%endblock%}
 {% block content %}
 
 <div class="posts">

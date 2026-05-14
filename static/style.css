@@ -125,3 +125,9 @@ details[open] > summary::before {
 .user{
     color: darkgreen;
 }
+.headerinfo img{
+    height: 100px;
+}
+.headerinfo{
+    text-align: center;
+}

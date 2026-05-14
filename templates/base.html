@@ -6,6 +6,7 @@
 </head>
 <body>
     <header>
+        {%block header%}{%endblock%}
         <div class="menu">działy: 
         {% for section in sections %}<a href="/section/{{section.name}}">{{section.name}}</a>/{% endfor %}
         <span class="login">
