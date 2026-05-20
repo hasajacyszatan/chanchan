@@ -1,12 +1,14 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: monospace;
     background-color: #002b36;
     color: #839496;
     margin: 0;
     padding: 20px;
 }
 .navauth {
-    margin-bottom: 20px;
+    position: absolute;
+    top: 15px;
+    right: 20px;
     font-size: 14px;
 }
 .navauth a {
@@ -15,6 +17,7 @@ body {
 }
 .navauth a:hover {
     text-decoration: underline;
+    color: #ff3333;
 }
 .boardsbox {
     background-color: #073642;
