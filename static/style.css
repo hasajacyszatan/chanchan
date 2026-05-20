@@ -2,17 +2,32 @@
     margin: 0px !important;
 }
 header {
-    background-color: gray;
+    background-color: #073642;
     width: 100%;
     font-size: 14px;
     font-family: monospace;
+    border-bottom: 2px solid darkgoldenrod;
+    box-sizing: border-box;
 }
 header .menu{
-    padding: 10px;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header .menu a {
+    color: #2aa198;
+    text-decoration: none;
+    font-weight: bold;
+}
+header .menu a:hover {
+    color: darkgoldenrod;
+    text-decoration: underline;
 }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: darkgrey;
+    font-family: monospace;
+    background-color: #002b36;
+    color: #839496;
     margin: 0;
     padding: 0;
 }
@@ -27,31 +42,58 @@ body {
 
 .created_at {
     float: right;
+    color: #586e75;
 }
 
 .images img {
-    border: double;
+    border: 2px solid darkgoldenrod;
+    margin-top: 10px;
     height: 150px;
 }
 
 .reply {
-    margin: 4px;
-    padding: 5px;
-    border: solid 1px whitesmoke;
-    background-color: gainsboro;
+    margin: 10px 0 0 20px; 
+    padding: 10px;
+    border-left: solid 3px darkgoldenrod;
+    background-color: #0a3c48;
+    color: #93a1a1;
 }
 
 .login {
     float: right;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+.login a {
+    color: #839496;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 15px;
+    transition: color 0,2s ease-in-out;
+}
+.login a::before {
+    content: "[";
+    color: darkgoldenrod;
+    margin-right: 2px;
+}
+.login a::after {
+    content: "]";
+    color: darkgoldenrod;
+    margin-left: 2px;
+}
+.login a:hover {
+    color: #ffffff;
+    text-decoration: none;
 }
 
 details > summary {
-    padding: 10px 16px;
-    background-color: #d4b483;
+    padding: 12px 16px;
+    background-color: darkgoldenrod;
+    color: #002b36;
     cursor: pointer;
     list-style: none;
     font-family: monospace;
-    font-size: 13px;
+    font-size: 14px;
     user-select: none;
     display: flex;
     align-items: center;
@@ -67,13 +109,14 @@ details[open] > summary::before {
     content: "−";
 }
 .postform {
-    margin-top: 20px;
+    margin-top: 0;
+    border-top: none;
 }
 .postform form {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 12px 5px 5px;
+    padding: 5px;
 }
 
 .postform form input[type="text"],
@@ -82,37 +125,54 @@ details[open] > summary::before {
     padding: 8px 12px;
     font-size: 14px;
     font-family: inherit;
-    background: #f5f0e8;
-    border: 1px solid darkgoldenrod;
+    background: #002b36;
+    border: 1px solid #586e75;
     box-sizing: border-box;
 }
+.postform form input[type="text"]:focus,
+.postform form textarea:focus {
+    border-color: darkgoldenrod;
+    outline: none;
+}
+
 .posts {
-    flex-wrap: wrap;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 15px;
+    padding: 20px;
 }
 .postform form textarea {
     min-height: 100px;
     resize: vertical;
 }
 
+.post .postform {
+    border: solid 2px darkgoldenrod;
+    background-color: #073642;
+    color: #93a1a1;
+    padding: 15px;
+    width: 70%;
+    box-sizing: border-box;
+}
 .postform form input[type="file"] {
     font-size: 13px;
+    color: #839496;
 }
 
 .postform form button {
     align-self: flex-end;
     padding: 8px 20px;
     background-color: darkgoldenrod;
-    color: white;
+    color: #002b36;
+    font-weight: bold;
     border: none;
     font-size: 14px;
     cursor: pointer;
 }
 
 .postform form button:hover {
-    background-color: goldenrod;
+    background-color: #b58900;
 }
 .postcontainer {
     gap: 10px;
@@ -121,13 +181,22 @@ details[open] > summary::before {
 }
 .content {
     flex-grow: 1;
+    margin-top: 10px;
+    line-height: 1.4;
 }
 .user{
-    color: darkgreen;
+    color: #859900;
+    font-weight: bold;
 }
 .headerinfo img{
     height: 100px;
 }
 .headerinfo{
     text-align: center;
+    padding: 20px 0;
+}
+.headerinfo h1 {
+    color: #dc322f;
+    font-family: monospace;
+    margin: 10px 0 5px 0;
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="/static/style.css">
-    <title>{% block title %}ukenchan{% endblock %}</title>
+    <title>{% block title %}UkenChan{% endblock %}</title>
 </head>
 <body>
     <header>
@@ -11,8 +11,8 @@
         {% for section in sections %}<a href="/section/{{section.name}}">{{section.name}}</a>/{% endfor %}
         <span class="login">
             {%if not user.username%}
-            <a href="/accounts/login">login</a>
-            <a href="/accounts/register">register</a>
+            <a href="/accounts/login">[Logowanie]</a>
+            <a href="/accounts/register">[Rejestracja]</a>
             {%else%}
             {{ user.username }}
             <form style="display: inline;" action="/accounts/logout/" method="POST">{% csrf_token %}<button type="submit">Logout</button></form>
