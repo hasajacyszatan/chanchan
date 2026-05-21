@@ -25,16 +25,16 @@ header .menu a:hover {
     text-decoration: underline;
 }
 body {
-    font-family: monospace;
+    color: #fdf6e3;
+    font-family: "Trebuchet MS", sans-serif;
     background-color: #002b36;
-    color: #839496;
     margin: 0;
     padding: 0;
 }
 
 .post, .postform {
-    border: solid 3px darkgoldenrod;
-    background-color: lightgray;
+    border: solid 2px #258bd2;
+    background-color: #586e75;
     padding: 5px;
     width: 70%;
     margin: 5px;
@@ -42,7 +42,7 @@ body {
 
 .created_at {
     float: right;
-    color: #586e75;
+    color: #fdf6e3;
 }
 
 .images img {
@@ -87,8 +87,8 @@ body {
 }
 
 details > summary {
-    padding: 12px 16px;
-    background-color: darkgoldenrod;
+    padding: 5px 10px;
+    background-color: #6c71c4;
     color: #002b36;
     cursor: pointer;
     list-style: none;
@@ -121,6 +121,7 @@ details[open] > summary::before {
 
 .postform form input[type="text"],
 .postform form textarea {
+    color: #fdf6e3;
     width: 100%;
     padding: 8px 12px;
     font-size: 14px;
@@ -150,7 +151,7 @@ details[open] > summary::before {
 .post .postform {
     border: solid 2px darkgoldenrod;
     background-color: #073642;
-    color: #93a1a1;
+    color: #fdf6e3;
     padding: 15px;
     width: 70%;
     box-sizing: border-box;
@@ -164,7 +165,7 @@ details[open] > summary::before {
     align-self: flex-end;
     padding: 8px 20px;
     background-color: darkgoldenrod;
-    color: #002b36;
+    color: #fdf6e3;
     font-weight: bold;
     border: none;
     font-size: 14px;
@@ -183,6 +184,7 @@ details[open] > summary::before {
     flex-grow: 1;
     margin-top: 10px;
     line-height: 1.4;
+    color: #fdf6e3;
 }
 .user{
     color: #859900;

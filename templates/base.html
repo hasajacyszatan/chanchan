@@ -7,8 +7,8 @@
 <body>
     <header>
         {%block header%}{%endblock%}
-        <div class="menu">działy: 
-        {% for section in sections %}<a href="/section/{{section.name}}">{{section.name}}</a>/{% endfor %}
+        <div class="menu"> 
+        {% for section in sections %}<a href="/section/{{section.name}}">{{section.name}}</a>{% endfor %}
         <span class="login">
             {%if not user.username%}
             <a href="/accounts/login">[Logowanie]</a>
