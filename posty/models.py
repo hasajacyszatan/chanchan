@@ -34,3 +34,4 @@ class Image(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True, related_name='images')
     reply = models.ForeignKey(Reply, on_delete=models.CASCADE, null=True, blank=True, related_name='images')
     image_path = models.CharField(max_length=500)
+    thumbnail_image_path = models.CharField(max_length=500)

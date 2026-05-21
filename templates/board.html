@@ -33,7 +33,7 @@
         <div class="postcontainer">        
         <div class="images">
             {% for image in i.images.all %}
-                <img src="{{image.image_path}}">
+                <img src="{{image.thumbnail_image_path}}" data-fullpng="{{image.image_path}}">
             {% endfor %}
         </div>
 
@@ -59,7 +59,7 @@
                 <div class="reply postcontainer">
                     <div class="images">
                         {% for image in reply.images.all %}
-                            <img src="{{image.image_path}}">
+                            <img src="{{image.thumbnail_image_path}}" data-fullpng="{{image.image_path}}">
                         {% endfor %}
                     </div>
                     <div class="content">

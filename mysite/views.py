@@ -6,24 +6,26 @@ from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import os
-
+import uuid
+from PIL import Image as PILImage
 def save_uploaded_image(uploaded_file, verifyfile_func, related_obj, relation_type="post"):
+    filename = str(uuid.uuid4())
     if not uploaded_file:
         return None
 
     if not verifyfile_func(uploaded_file):
         return "too_large"
 
-    file_path = f"static/images/{uploaded_file.name}"
-
-    with open(file_path, "wb+") as destination:
-        for chunk in uploaded_file.chunks():
-            destination.write(chunk)
-
+    img = PILImage.open(uploaded_file)
+    file_path = f"static/images/{filename}.png"
+    img.save(file_path)
+    thumbnail_file_path = f"static/images/{filename}_thumbnail.png"
+    img.thumbnail((300,300))
     image_data = {
-        "image_path": "/static/images/" + uploaded_file.name
+        "image_path": "/"+file_path,
+        "thumbnail_image_path": "/"+thumbnail_file_path
     }
-
+    img.save(thumbnail_file_path)
     if relation_type == "post":
         image_data["post"] = related_obj
     else:

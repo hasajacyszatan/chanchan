@@ -33,8 +33,11 @@
                     img.style.height = '';
                     img.style.flexBasis = '';
                 } else {
-                    img.style.height = '60vh';
-                    img.style.width = '100%';
+                    img.src = img.dataset.fullpng;
+                    img.style.maxHeight = '500px';
+                    img.style.maxWidth = '500px';
+                    img.style.width = 'auto';
+                    img.style.height = 'auto';
                     img.style.flexBasis = '100%';
                 }
             });
