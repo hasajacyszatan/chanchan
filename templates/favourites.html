@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twoje Ulubione Posty</title>
+    <link rel="stylesheet" href="/static/indexstyle.css">
+</head>
+<body>
+
+    <div class="top-auth-bar">
+        [ <a href="/">Powrót do głównej</a> ]
+    </div>
+
+    <div class="boards-box" style="margin-top: 50px;">
+        <div class="boards-header">
+            Twoje Zapisane Posty (★)
+        </div>
+        
+        <div class="boards-content" style="display: block; padding: 20px;">
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="board" style="margin-bottom: 15px; border-bottom: 1px solid #586e75; padding-bottom: 10px;">
+                        <span class="board-name">No. {{ post.id }}</span>
+                        <span class="board-desc"> – {{ post.text|truncatewords:20 }}</span>
+                        <a href="{% url 'toggle_favourite' post.id %}" style="color: #dc322f; margin-left: 10px;">[Usuń]</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #93a1a1;">Nie masz jeszcze żadnych ulubionych postów.</p>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

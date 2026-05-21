@@ -5,6 +5,8 @@ from django.shortcuts import render as django_render
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 import os
 import uuid
 from PIL import Image as PILImage
@@ -105,3 +107,19 @@ def submitreply(request, post_id):
 def post(request, post_id):
     posts = Post.objects.filter(id=post_id)
     return render(request, 'post.html', {'posts': posts})
+
+@login_required
+def toggle_favourite(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    if post.favourites.filter(id=request.user.id).exists():
+        post.favourites.remove(request.user)
+    else:
+        post.favourites.add(request.user)
+
+    return redirect('favourite_list', post_id=post.id)
+
+@login_required
+def favourite_list(request):
+    fav_posts = request.user.favourite_posts.all()
+    return render(request, 'favourites.html', {'posts': fav_posts})

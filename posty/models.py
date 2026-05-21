@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
 
 class Section(models.Model):
     image_path = models.CharField(max_length=500, null=True, blank=True)
@@ -17,6 +18,7 @@ class Post(models.Model):
         blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    favourites = models.ManyToManyField(User, related_name='favourite_posts', blank=True)
 
 class Reply(models.Model):
     content = models.TextField()

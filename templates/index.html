@@ -13,8 +13,16 @@
 	</header>
 	</div>
 	<div class="navauth">
+	{% if request.user.is_authenticated %}
+        Witaj, {{ request.user.username }}!
+			  [ <a href="{% url 'favourite_list' %}">★ Moje Ulubione </a> ]
+        [ <a href="/accounts/logout">Wyloguj</a> ]
+    {% else %} 
 			<a href="/accounts/login">[Logowanie]</a>
 		<a href="/accounts/register">[Rejestracja]</a>
+		{% endif %}
+	</div>
+
 	</div>
 
 	<div>
