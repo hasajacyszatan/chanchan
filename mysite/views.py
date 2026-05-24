@@ -1,4 +1,3 @@
-from posty.models import Post
 from posty.models import *
 from django.http import HttpResponse
 from django.shortcuts import render as django_render

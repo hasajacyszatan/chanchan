@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from .views import *  # jeśli w tym samym katalogu
-from . import  views
-
+from api import views as apiviews
 urlpatterns = [
     path('', index),
     path('section/<str:dzial>', section),
@@ -12,6 +11,10 @@ urlpatterns = [
     path('submitreply/<int:post_id>', submitreply),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register', register),
-    path('post/<int:post_id>/favourite/', views.toggle_favourite, name='toggle_favourite'),
-    path('favourites/', views.favourite_list, name='favourite_list'),
+    path('post/<int:post_id>/favourite/', toggle_favourite, name='toggle_favourite'),
+    path('favourites/', favourite_list, name='favourite_list'),
+    path('api/section', apiviews.section),
+    path('api/post', apiviews.post),
+    path('api/reply', apiviews.reply),
+    path('api/image/<int:imageid>', apiviews.image)
 ]
