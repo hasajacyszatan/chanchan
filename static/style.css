@@ -1,7 +1,7 @@
 .replyform{
     margin: 0px !important;
 }
-header {
+header, footer {
     background-color: #073642;
     width: 100%;
     font-size: 14px;
@@ -201,4 +201,8 @@ details[open] > summary::before {
     color: #dc322f;
     font-family: monospace;
     margin: 10px 0 5px 0;
+}
+footer a{
+    text-decoration: none;
+    color: white;
 }

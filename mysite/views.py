@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 import os
 import uuid
+import math
 from PIL import Image as PILImage
 def save_uploaded_image(uploaded_file, verifyfile_func, related_obj, relation_type="post"):
     filename = str(uuid.uuid4())
@@ -64,9 +65,12 @@ def index(request):
     posts = Post.objects.all()
     return render(request, 'index.html', {'posts': posts})
 def section(request, dzial):
+    postperpage = 5
     section = Section.objects.get(name=dzial)
-    posts = Post.objects.filter(section=section.id).order_by('-id')
-    return render(request, 'board.html', {'posts': posts, "section": section})
+    pagecount = math.ceil(len(Post.objects.filter(section=section.id).order_by('-id').all())/postperpage)
+    page=int(request.GET.get("page",0))
+    posts = Post.objects.filter(section=section.id).order_by('-id')[postperpage*page:(postperpage*page+postperpage)]
+    return render(request, 'board.html', {'posts': posts, "section": section, "pagecount": range(pagecount)})
 def submitpost(request):
     uploaded_file = request.FILES.get('file')
     title = request.POST.get("title")

@@ -78,6 +78,11 @@
     </div>
     {%endif%}
 </div>
+<footer>
+    {% for i in pagecount %}
+        <a href="?page={{i}}">{{i}}</a>
+    {% endfor %}
+</footer>
 <script>
     const inputZdjęcia = document.getElementById('wybor-zdjecia');
     const podglądZdjęcia = document.getElementById('podglad');
