@@ -72,12 +72,11 @@ def section(request, dzial):
     posts = Post.objects.filter(section=section.id).order_by('-id')[postperpage*page:(postperpage*page+postperpage)]
     return render(request, 'board.html', {'posts': posts, "section": section, "pagecount": range(pagecount)})
 def submitpost(request):
-    uploaded_file = request.FILES.get('file')
     title = request.POST.get("title")
     content = request.POST.get("content")
     section_id = request.POST.get("section_id")
     userid = request.POST.get("userid", None)
-    print(userid)
+    
     if not userid == "None":
         user = User.objects.get(id=userid)
     else:
@@ -87,26 +86,48 @@ def submitpost(request):
     newpost = Post(title=title, content=content, section=section, user=user)
     newpost.save()
 
-    result = save_uploaded_image(uploaded_file, verifyfile, newpost, "post")
+    # Obsługa trzech plików
+    files = [
+        (request.FILES.get('file'), "zbyt duży plik (pierwsze zdjęcie)"),
+        (request.FILES.get('file2'), "zbyt duży plik (drugie zdjęcie)"),
+        (request.FILES.get('file3'), "zbyt duży plik (trzecie zdjęcie)")
+    ]
 
-    if result == "too_large":
-        return HttpResponse("zbyt duży plik")
+    for uploaded_file, error_msg in files:
+        if uploaded_file:
+            result = save_uploaded_image(uploaded_file, verifyfile, newpost, "post")
+            if result == "too_large":
+                return HttpResponse(error_msg)
 
     return redirect('/section/' + section.name)
 def submitreply(request, post_id):
     post = Post.objects.get(id=post_id)
     content = request.POST.get("content")
-    uploaded_file = request.FILES.get('file')
-
+    
     newreply = Reply(content=content, reply_to=post)
     newreply.save()
 
-    result = save_uploaded_image(uploaded_file, verifyfile, newreply, "reply")
+    uploaded_file = request.FILES.get('file')
+    uploaded_file2 = request.FILES.get('file2')
+    uploaded_file3 = request.FILES.get('file3')
 
-    if result == "too_large":
-        return HttpResponse("zbyt duży plik")
+    if uploaded_file:
+        result = save_uploaded_image(uploaded_file, verifyfile, newreply, "reply")
+        if result == "too_large":
+            return HttpResponse("zbyt duży plik (pierwsze zdjęcie)")
+
+    if uploaded_file2:
+        result2 = save_uploaded_image(uploaded_file2, verifyfile, newreply, "reply")
+        if result2 == "too_large":
+            return HttpResponse("zbyt duży plik (drugie zdjęcie)")
+
+    if uploaded_file3:
+        result3 = save_uploaded_image(uploaded_file3, verifyfile, newreply, "reply")
+        if result3 == "too_large":
+            return HttpResponse("zbyt duży plik (trzecie zdjęcie)")
 
     return redirect('/post/' + str(post_id))
+
 def post(request, post_id):
     posts = Post.objects.filter(id=post_id)
     return render(request, 'post.html', {'posts': posts})
