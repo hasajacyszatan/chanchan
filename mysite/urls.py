@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import *  # jeśli w tym samym katalogu
 from api import views as apiviews
+from posty.views import regulamin
 urlpatterns = [
     path('', index),
     path('section/<str:dzial>', section),
@@ -16,5 +17,6 @@ urlpatterns = [
     path('api/section', apiviews.section),
     path('api/post', apiviews.post),
     path('api/reply', apiviews.reply),
-    path('api/image/<int:imageid>', apiviews.image)
+    path('api/image/<int:imageid>', apiviews.image),
+    path('regulamin/', regulamin, name='regulamin')
 ]

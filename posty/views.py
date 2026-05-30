@@ -19,3 +19,6 @@ def favourite_list(request):
     return render(request, 'favourites.html', {'posts': fav_posts})
 
 # Create your views here.
+
+def regulamin(request):
+    return render(request, 'regulamin.html')
