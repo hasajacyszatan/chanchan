@@ -1,7 +1,5 @@
 {% extends "base.html" %}
-
 {% block title %}{{ section.name }}{% endblock %}
-
 {% block header %}
     <div class="headerinfo">
         {% if section.image_path %}
@@ -10,10 +8,8 @@
         <span>{{ section.description }}</span>
     </div>
 {% endblock %}
-
 {% block content %}
 <div class="posts">
-
     <div class="postform">
         <details>
             <summary>Dodaj post</summary>
@@ -27,45 +23,18 @@
             </form>
         </details>
     </div>
-
     {% if posts %}
         {% for i in posts %}
         <div class="post">
-            <div class="postcontainer">
-                <div class="images">
-                    {% for image in i.images.all %}
-                        <img src="{{ image.thumbnail_image_path }}" data-fullpng="{{ image.image_path }}">
-                    {% endfor %}
-                </div>
-                <div class="content">
-                    <b class="title">
-                        {{ i.title }}
-                        <span class="user">{{ i.user }}</span>
-                    </b>
-                    <b class="created_at">
-                        <a href="/post/{{ i.id }}">Reply</a>
-                        id: {{ i.id }}
-                        {{ i.created_at }}
-                    </b>
-                    <hr>
-                    {{ i.content }}
-                </div>
-            </div>
+            {% include "_postcontainer.html" with obj=i show_title=True show_user=True show_meta=True show_reply_link=True %}
 
             {% if i.reply_set.all %}
             <details>
                 <summary>Replies ({{ i.reply_set.all|length }})</summary>
                 <div class="replies">
                     {% for reply in i.reply_set.all %}
-                    <div class="reply postcontainer">
-                        <div class="images">
-                            {% for image in reply.images.all %}
-                                <img src="{{ image.thumbnail_image_path }}" data-fullpng="{{ image.image_path }}">
-                            {% endfor %}
-                        </div>
-                        <div class="content">
-                            {{ reply.content }}
-                        </div>
+                    <div class="reply">
+                            {% include "_postcontainer.html" with obj=reply %}
                     </div>
                     {% endfor %}
                 </div>
@@ -73,7 +42,6 @@
             {% endif %}
         </div>
         {% endfor %}
-
         {# Paginacja #}
         {% if pagecount %}
         <div class="pagination">
@@ -84,13 +52,10 @@
             {% endfor %}
         </div>
         {% endif %}
-
     {% else %}
     <div class="post">Brak postów w tym dziale.</div>
     {% endif %}
-
 </div>
-
 <script src="/static/image_upload.js"></script>
 <script>
     initImageUpload(document.getElementById('post-form'), { maxFiles: 3, maxSizeMB: 4 });

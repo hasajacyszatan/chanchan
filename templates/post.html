@@ -1,49 +1,22 @@
 {% extends "base.html" %}
-
 {% block title %}Post #{{ posts.0.id }}{% endblock %}
-
 {% block content %}
 <div class="posts">
     {% for i in posts %}
     <div class="post">
-
         {# ── Główny post ──────────────────────────────────────────────── #}
-        <div class="postcontainer">
-            <div class="images">
-                {% for image in i.images.all %}
-                    <img src="{{ image.thumbnail_image_path }}" data-fullpng="{{ image.image_path }}">
-                {% endfor %}
-            </div>
-            <div class="content">
-                <b class="title">{{ i.title }}</b>
-                <b class="created_at">
-                    id: {{ i.id }}
-                    {{ i.created_at }}
-                </b>
-                <hr>
-                {{ i.content }}
-            </div>
-        </div>
+        {% include "_postcontainer.html" with obj=i show_title=True show_meta=True %}
 
         {# ── Odpowiedzi ───────────────────────────────────────────────── #}
         {% if i.reply_set.all %}
-        <details open>
-            <summary>Replies ({{ i.reply_set.all|length }})</summary>
-            <div class="replies">
-                {% for reply in i.reply_set.all %}
-                <div class="reply postcontainer">
-                    <div class="images">
-                        {% for image in reply.images.all %}
-                            <img src="{{ image.thumbnail_image_path }}" data-fullpng="{{ image.image_path }}">
-                        {% endfor %}
-                    </div>
-                    <div class="content">
-                        {{ reply.content }}
-                    </div>
+            <details>
+                <summary>Replies ({{ i.reply_set.all|length }})</summary>
+                <div class="replies">
+                    {% for reply in i.reply_set.all %}
+                        <div class="reply">{% include "_postcontainer.html" with obj=reply %}</div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
-        </details>
+            </details>
         {% endif %}
 
         {# ── Formularz odpowiedzi ─────────────────────────────────────── #}
@@ -59,11 +32,9 @@
                 </form>
             </details>
         </div>
-
     </div>
     {% endfor %}
 </div>
-
 <script src="/static/image_upload.js"></script>
 <script>
     document.querySelectorAll('[id^="reply-form-"]').forEach(form => {

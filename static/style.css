@@ -206,3 +206,6 @@ footer a{
     text-decoration: none;
     color: white;
 }
+.postcontent {
+    white-space: pre;
+}

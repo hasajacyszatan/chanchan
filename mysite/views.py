@@ -102,7 +102,7 @@ def section(request, dzial):
     pagecount = math.ceil(qs.count() / POSTS_PER_PAGE)
     posts = qs[POSTS_PER_PAGE * page : POSTS_PER_PAGE * (page + 1)]
 
-    return render(request, 'board.html', {
+    return render(request, 'section.html', {
         'posts':     posts,
         'section':   section,
         'pagecount': range(pagecount),
