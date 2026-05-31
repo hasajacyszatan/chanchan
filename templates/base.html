@@ -6,41 +6,46 @@
 </head>
 <body>
     <header>
-        {%block header%}{%endblock%}
-        <div class="menu"> 
-        {% for section in sections %}<a href="/section/{{section.name}}">{{section.name}}</a>{% endfor %}
-        <span class="login">
-            {%if not user.username%}
-            <a href="/accounts/login">[Logowanie]</a>
-            <a href="/accounts/register">[Rejestracja]</a>
-            {%else%}
-            {{ user.username }}
-            <form style="display: inline;" action="/accounts/logout/" method="POST">{% csrf_token %}<button type="submit">Logout</button></form>
-            {%endif%}
-
-        </span>
+        {% block header %}{% endblock %}
+        <div class="menu">
+            {% for section in sections %}
+                <a href="/section/{{ section.name }}">{{ section.name }}</a>
+            {% endfor %}
+            <span class="login">
+                {% if not user.is_authenticated %}
+                    <a href="/accounts/login">[Logowanie]</a>
+                    <a href="/accounts/register">[Rejestracja]</a>
+                {% else %}
+                    {{ user.username }}
+                    <form style="display:inline;" action="/accounts/logout/" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% endif %}
+            </span>
         </div>
     </header>
 
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 
     <script>
-        document.querySelectorAll('.images img').forEach(img => {
-            img.addEventListener('click', () => {
-                if (img.style.height) {
-                    img.style.width = '';
-                    img.style.height = '';
-                    img.style.flexBasis = '';
-                } else {
-                    img.src = img.dataset.fullpng;
-                    img.style.maxHeight = '500px';
-                    img.style.maxWidth = '500px';
-                    img.style.width = 'auto';
-                    img.style.height = 'auto';
-                    img.style.flexBasis = '100%';
-                }
-            });
+        // Klik w miniaturę → przełącza na pełny rozmiar (używa data-fullpng)
+        document.addEventListener('click', e => {
+            const img = e.target.closest('.images img');
+            if (!img) return;
+
+            if (img.dataset.expanded) {
+                // Wróć do miniatury
+                img.src = img.dataset.thumbnailSrc;
+                img.style.cssText = '';
+                delete img.dataset.expanded;
+            } else {
+                // Pokaż pełne zdjęcie
+                img.dataset.thumbnailSrc = img.src;
+                img.src = img.dataset.fullpng || img.src;
+                img.style.cssText = 'max-height:500px;max-width:500px;width:auto;height:auto;flex-basis:100%;cursor:zoom-out;';
+                img.dataset.expanded = '1';
+            }
         });
     </script>
 </body>
