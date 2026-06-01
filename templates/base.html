@@ -30,6 +30,10 @@
 
     <script>
         // Klik w miniaturę → przełącza na pełny rozmiar (używa data-fullpng)
+        function togglefav(postid, el) {
+            fetch("/post/"+postid+"/favourite/")
+            el.innerText = "dodano do fav"
+        }
         document.addEventListener('click', e => {
             const img = e.target.closest('.images img');
             if (!img) return;

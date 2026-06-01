@@ -44,6 +44,10 @@ body {
     float: right;
     color: #fdf6e3;
 }
+.created_at a{
+    padding: 2px;
+    margin: 2px;
+}
 
 .images img {
     border: 2px solid darkgoldenrod;

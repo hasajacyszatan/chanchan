@@ -44,6 +44,7 @@
         {% endfor %}
         {# Paginacja #}
         {% if pagecount %}
+        <footer>
         <div class="pagination">
             {% for p in pagecount %}
             <a href="?page={{ p }}" {% if forloop.counter0 == request.GET.page|default:0|add:0 %}class="active"{% endif %}>
@@ -51,6 +52,7 @@
             </a>
             {% endfor %}
         </div>
+        </footer>
         {% endif %}
     {% else %}
     <div class="post">Brak postów w tym dziale.</div>
