@@ -9,11 +9,11 @@
 
         {# ── Odpowiedzi ───────────────────────────────────────────────── #}
         {% if i.reply_set.all %}
-            <details>
+            <details open>
                 <summary>Replies ({{ i.reply_set.all|length }})</summary>
                 <div class="replies">
                     {% for reply in i.reply_set.all %}
-                        <div class="reply">{% include "_postcontainer.html" with obj=reply %}</div>
+                        <div class="reply">{% include "_postcontainer.html" with obj=reply replyreply=True %}</div>
                     {% endfor %}
                 </div>
             </details>
@@ -25,7 +25,7 @@
                 <summary>Odpowiedz</summary>
                 <form id="reply-form-{{ i.id }}" action="/submitreply/{{ i.id }}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <textarea name="content" placeholder="Treść odpowiedzi..."></textarea>
+                    <textarea id="replytext" name="content" placeholder="Treść odpowiedzi..."></textarea>
                     <input type="hidden" name="section_id" value="{{ section.id }}">
                     {# Obrazki wstrzykuje image_upload.js #}
                     <button type="submit">Wyślij</button>

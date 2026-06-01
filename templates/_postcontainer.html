@@ -10,6 +10,9 @@
             <span class="user">{{ obj.user }}</span>
         </b>
         <b class="created_at">
+            {%if replyreply%}
+                <a href="#" onclick="replytoreply({{obj.id}})">Reply</a>
+            {%endif%}
             {% if show_reply_link %}<a href="/post/{{ obj.id }}">Reply</a><a href="#" onclick="togglefav({{obj.id}}, this)">dodaj do fav ❤</a>{% endif %}
             id: {{ obj.id }}
             {{ obj.created_at }}
