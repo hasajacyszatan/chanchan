@@ -214,7 +214,7 @@ footer a{
     color: white;
 }
 .postcontent {
-    white-space: pre;
+    white-space: pre-wrap;
 }
 #scrollToTopBtn {
     display: none; 
