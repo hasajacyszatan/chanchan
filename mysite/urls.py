@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from .views import *  # jeśli w tym samym katalogu
 from api import views as apiviews
 from posty.views import regulamin
@@ -18,5 +19,6 @@ urlpatterns = [
     path('api/post', apiviews.post),
     path('api/reply', apiviews.reply),
     path('api/image/<int:imageid>', apiviews.image),
-    path('regulamin/', regulamin, name='regulamin')
+    path('regulamin/', regulamin, name='regulamin'),
+    path('tworcy/', TemplateView.as_view(template_name='tworcy.html'), name='tworcy')
 ]
