@@ -62,7 +62,10 @@ body {
     background-color: #0a3c48;
     color: #93a1a1;
 }
-
+.reply:target{
+    background-color: #1a5f70;
+    
+}
 .login {
     float: right;
     padding: 10px 20px;

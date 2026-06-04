@@ -1,8 +1,10 @@
+<!-- {% include "base.html"%} -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Twoje Ulubione Posty</title>
+    <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/indexstyle.css">
 </head>
 <body>
@@ -19,14 +21,8 @@
         <div class="boards-content" style="display: block; padding: 20px;">
             {% if posts %}
                 {% for post in posts %}
-                    <div class="board" style="margin-bottom: 15px; border-bottom: 1px solid #586e75; padding-bottom: 10px;">
-                        <span class="board-name">No. {{ post.id }}</span>
-                        <br>
-                        {% for image in post.images.all %}
-                            <img src="{{image.thumbnail_image_path}}" height="100px">
-                        {% endfor %}
-                        <span class="board-desc"> {{ post.text|truncatewords:20 }}</span>
-                        <a href="{% url 'toggle_favourite' post.id %}" style="color: #dc322f; margin-left: 10px;">[Usuń]</a>
+                    <div class="post">
+                    {% include "_postcontainer.html" with obj=post replyreply=True %}
                     </div>
                 {% endfor %}
             {% else %}
