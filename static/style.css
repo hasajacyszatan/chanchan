@@ -44,6 +44,10 @@ body {
     float: right;
     color: #fdf6e3;
 }
+.created_at a{
+    padding: 2px;
+    margin: 2px;
+}
 
 .images img {
     border: 2px solid darkgoldenrod;
@@ -53,12 +57,15 @@ body {
 
 .reply {
     margin: 10px 0 0 20px; 
-    padding: 10px;
+    padding: 5px;
     border-left: solid 3px darkgoldenrod;
     background-color: #0a3c48;
     color: #93a1a1;
 }
-
+.reply:target{
+    background-color: #1a5f70;
+    
+}
 .login {
     float: right;
     padding: 10px 20px;
@@ -205,4 +212,7 @@ details[open] > summary::before {
 footer a{
     text-decoration: none;
     color: white;
+}
+.postcontent {
+    white-space: pre;
 }

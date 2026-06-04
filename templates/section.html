@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ section.name }}{% endblock %}
+{% block header %}
+    <div class="headerinfo">
+        {% if section.image_path %}
+        <div><img src="{{ section.image_path }}"></div>
+        {% endif %}
+        <span>{{ section.description }}</span>
+    </div>
+{% endblock %}
+{% block content %}
+<div class="posts">
+    <div class="postform">
+        <details>
+            <summary>Dodaj post</summary>
+            <form id="post-form" action="/submitpost/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="Tytuł...">
+                <textarea name="content" placeholder="Treść posta..."></textarea>
+                <input type="hidden" name="section_id" value="{{ section.id }}">
+                {# Obrazki wstrzykuje image_upload.js — nie dodawaj tu inputów file #}
+                <button type="submit">Dodaj</button>
+            </form>
+        </details>
+    </div>
+    {% if posts %}
+        {% for i in posts %}
+        <div class="post">
+            {% include "_postcontainer.html" with obj=i show_title=True show_user=True show_meta=True show_reply_link=True %}
+
+            {% if i.reply_set.all %}
+            <details>
+                <summary>Replies ({{ i.reply_set.all|length }})</summary>
+                <div class="replies">
+                    {% for reply in i.reply_set.all %}
+                    <div class="reply">
+                            {% include "_postcontainer.html" with obj=reply %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </details>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {# Paginacja #}
+        {% if pagecount %}
+        <footer>
+        <div class="pagination">
+            {% for p in pagecount %}
+            <a href="?page={{ p }}" {% if forloop.counter0 == request.GET.page|default:0|add:0 %}class="active"{% endif %}>
+                {{ forloop.counter }}
+            </a>
+            {% endfor %}
+        </div>
+        </footer>
+        {% endif %}
+    {% else %}
+    <div class="post">Brak postów w tym dziale.</div>
+    {% endif %}
+</div>
+<script src="/static/image_upload.js"></script>
+<script>
+    initImageUpload(document.getElementById('post-form'), { maxFiles: 3, maxSizeMB: 4 });
+</script>
+{% endblock %}

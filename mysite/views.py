@@ -1,33 +1,51 @@
 from posty.models import *
 from django.http import HttpResponse
-from django.shortcuts import render as django_render
-from django.shortcuts import redirect
+from django.shortcuts import render as django_render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
-import os
-import uuid
-import math
 from PIL import Image as PILImage
-def save_uploaded_image(uploaded_file, verifyfile_func, related_obj, relation_type="post"):
+import math
+import uuid
+import os
+
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def render(request, template_name, context=None):
+    """Wrapper dodający sections do każdego kontekstu."""
+    if context is None:
+        context = {}
+    context['sections'] = Section.objects.all()
+    return django_render(request, template_name, context)
+
+
+def save_uploaded_image(uploaded_file, related_obj, relation_type="post"):
+    """
+    Zapisuje przesłany obraz (pełny + miniatura).
+    Zwraca obiekt Image lub rzuca ValueError gdy plik za duży.
+    """
+    MAX_SIZE = 4 * 1024 * 1024
+    if uploaded_file.size > MAX_SIZE:
+        raise ValueError(f'Plik "{uploaded_file.name}" jest za duży (max 4 MB).')
+
     filename = str(uuid.uuid4())
-    if not uploaded_file:
-        return None
-
-    if not verifyfile_func(uploaded_file):
-        return "too_large"
-
     img = PILImage.open(uploaded_file)
-    file_path = f"static/images/{filename}.png"
-    img.save(file_path)
-    thumbnail_file_path = f"static/images/{filename}_thumbnail.png"
-    img.thumbnail((300,300))
+
+    # Konwersja do RGB żeby JPEG/PNG z kanałem alpha nie sypał błędami
+    if img.mode not in ("RGB", "L"):
+        img = img.convert("RGB")
+
+    full_path      = f"static/images/{filename}.png"
+    thumbnail_path = f"static/images/{filename}_thumbnail.png"
+
+    img.save(full_path)
+    img.thumbnail((300, 300))
+    img.save(thumbnail_path)
+
     image_data = {
-        "image_path": "/"+file_path,
-        "thumbnail_image_path": "/"+thumbnail_file_path
+        "image_path":           "/" + full_path,
+        "thumbnail_image_path": "/" + thumbnail_path,
     }
-    img.save(thumbnail_file_path)
     if relation_type == "post":
         image_data["post"] = related_obj
     else:
@@ -35,113 +53,116 @@ def save_uploaded_image(uploaded_file, verifyfile_func, related_obj, relation_ty
 
     image = Image(**image_data)
     image.save()
-
     return image
-def verifyfile(value):
-    limit = 4 * 1024 * 1024
-    if value.size > limit:
-        return False
-    return True
-def render(request, template_name, context=None):
-    if context is None:
-        context = {}
 
-    context['sections'] = Section.objects.all()
-    return django_render(request, template_name, context)
 
+def _save_images_from_request(request, related_obj, relation_type="post"):
+    """
+    Pobiera wszystkie pliki o nazwach file, file2, file3, … z request.FILES
+    i zapisuje je. Zwraca HttpResponse z błędem albo None gdy OK.
+    """
+    # Zbieramy pliki w kolejności: file, file2, file3, ...
+    files = []
+    for key in sorted(request.FILES.keys()):
+        if key == 'file' or (key.startswith('file') and key[4:].isdigit()):
+            files.append(request.FILES[key])
+
+    for uploaded_file in files:
+        try:
+            save_uploaded_image(uploaded_file, related_obj, relation_type)
+        except ValueError as e:
+            return HttpResponse(str(e), status=400)
+    return None
+
+
+# ── Widoki ────────────────────────────────────────────────────────────────────
 
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
-
         if form.is_valid():
             form.save()
             return redirect("login")
     else:
         form = UserCreationForm()
-
     return render(request, "registration/register.html", {"form": form})
+
+
 def index(request):
     posts = Post.objects.all()
     return render(request, 'index.html', {'posts': posts})
+
+
 def section(request, dzial):
-    postperpage = 5
-    section = Section.objects.get(name=dzial)
-    pagecount = math.ceil(len(Post.objects.filter(section=section.id).order_by('-id').all())/postperpage)
-    page=int(request.GET.get("page",0))
-    posts = Post.objects.filter(section=section.id).order_by('-id')[postperpage*page:(postperpage*page+postperpage)]
-    return render(request, 'board.html', {'posts': posts, "section": section, "pagecount": range(pagecount)})
+    POSTS_PER_PAGE = 5
+    section = get_object_or_404(Section, name=dzial)
+    qs = Post.objects.filter(section=section).order_by('-id')
+
+    page = max(int(request.GET.get("page", 0)), 0)
+    pagecount = math.ceil(qs.count() / POSTS_PER_PAGE)
+    posts = qs[POSTS_PER_PAGE * page : POSTS_PER_PAGE * (page + 1)]
+
+    return render(request, 'section.html', {
+        'posts':     posts,
+        'section':   section,
+        'pagecount': range(pagecount),
+        'current_page': page,
+    })
+
+
 def submitpost(request):
-    title = request.POST.get("title")
-    content = request.POST.get("content")
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    title      = request.POST.get("title", "").strip()
+    content    = request.POST.get("content", "").strip()
     section_id = request.POST.get("section_id")
-    userid = request.POST.get("userid", None)
-    
-    if not userid == "None":
-        user = User.objects.get(id=userid)
-    else:
-        user = None
-    section = Section.objects.get(id=section_id)
+    section    = get_object_or_404(Section, id=section_id)
+
+    # Używamy request.user zamiast ufać danym z POST
+    user = request.user if request.user.is_authenticated else None
 
     newpost = Post(title=title, content=content, section=section, user=user)
     newpost.save()
 
-    # Obsługa trzech plików
-    files = [
-        (request.FILES.get('file'), "zbyt duży plik (pierwsze zdjęcie)"),
-        (request.FILES.get('file2'), "zbyt duży plik (drugie zdjęcie)"),
-        (request.FILES.get('file3'), "zbyt duży plik (trzecie zdjęcie)")
-    ]
-
-    for uploaded_file, error_msg in files:
-        if uploaded_file:
-            result = save_uploaded_image(uploaded_file, verifyfile, newpost, "post")
-            if result == "too_large":
-                return HttpResponse(error_msg)
+    err = _save_images_from_request(request, newpost, "post")
+    if err:
+        return err
 
     return redirect('/section/' + section.name)
+
+
 def submitreply(request, post_id):
-    post = Post.objects.get(id=post_id)
-    content = request.POST.get("content")
-    
+    if request.method != "POST":
+        return HttpResponse(status=405)
+
+    post    = get_object_or_404(Post, id=post_id)
+    content = request.POST.get("content", "").strip()
+
     newreply = Reply(content=content, reply_to=post)
     newreply.save()
 
-    uploaded_file = request.FILES.get('file')
-    uploaded_file2 = request.FILES.get('file2')
-    uploaded_file3 = request.FILES.get('file3')
-
-    if uploaded_file:
-        result = save_uploaded_image(uploaded_file, verifyfile, newreply, "reply")
-        if result == "too_large":
-            return HttpResponse("zbyt duży plik (pierwsze zdjęcie)")
-
-    if uploaded_file2:
-        result2 = save_uploaded_image(uploaded_file2, verifyfile, newreply, "reply")
-        if result2 == "too_large":
-            return HttpResponse("zbyt duży plik (drugie zdjęcie)")
-
-    if uploaded_file3:
-        result3 = save_uploaded_image(uploaded_file3, verifyfile, newreply, "reply")
-        if result3 == "too_large":
-            return HttpResponse("zbyt duży plik (trzecie zdjęcie)")
+    err = _save_images_from_request(request, newreply, "reply")
+    if err:
+        return err
 
     return redirect('/post/' + str(post_id))
+
 
 def post(request, post_id):
     posts = Post.objects.filter(id=post_id)
     return render(request, 'post.html', {'posts': posts})
 
+
 @login_required
 def toggle_favourite(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-
     if post.favourites.filter(id=request.user.id).exists():
         post.favourites.remove(request.user)
     else:
         post.favourites.add(request.user)
+    return redirect('favourite_list')
 
-    return redirect('favourite_list', post_id=post.id)
 
 @login_required
 def favourite_list(request):

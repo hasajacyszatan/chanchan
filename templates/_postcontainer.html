@@ -1,0 +1,28 @@
+<div class="postcontainer">
+    <div class="images">
+        {% for image in obj.images.all %}
+            <img src="{{ image.thumbnail_image_path }}" data-fullpng="{{ image.image_path }}">
+        {% endfor %}
+    </div>
+    <div class="content">
+        <b class="title">
+            {{ obj.title }}
+            <span class="user">{{ obj.user }}</span>
+        </b>
+        <b class="created_at">
+            {%if replyreply%}
+                <a href="#" onclick="replytoreply({{obj.id}})">Reply</a>
+            {%endif%}
+            {% if show_reply_link %}<a href="/post/{{ obj.id }}">Reply</a>
+            {% if request.user.is_authenticated %}
+            <a href="#" onclick="togglefav({{obj.id}}, this)">dodaj do fav ❤</a>
+
+            {% endif %}
+            {% endif %}
+            id: {{ obj.id }}
+            {{ obj.created_at }}
+        </b>
+        <hr>
+        <div class="postcontent">{{ obj.content }}</div>
+    </div>
+</div>

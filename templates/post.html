@@ -1,298 +1,43 @@
 {% extends "base.html" %}
-
-{% block title %}Strona główna{% endblock %}
-
+{% block title %}Post #{{ posts.0.id }}{% endblock %}
 {% block content %}
-
 <div class="posts">
     {% for i in posts %}
     <div class="post">
-        <div class="postcontainer">        
-        <div class="images">
-            {% for image in i.images.all %}
-                <img src="{{image.image_path}}">
-            {% endfor %}
-        </div>
+        {# ── Główny post ──────────────────────────────────────────────── #}
+        {% include "_postcontainer.html" with obj=i show_title=True show_meta=True %}
 
-        <div class="content">
-            <b class="title">{{i.title}}</b>
-            <b class="created_at">
-                id: {{i.id}} 
-                {{i.created_at}}
-            </b>
-            <br>
-            {{i.content}}
-        </div>
-        </div>
-        {%if i.reply_set.all|length%}
-    <details open>
-    <summary>Replies</summary>
-
-    <div class="replies">
-        {% for reply in i.reply_set.all %}
-            <div class="reply postcontainer">
-                <div class="images">
-                    {% for image in reply.images.all %}
-                        <img src="{{image.image_path}}">
+        {# ── Odpowiedzi ───────────────────────────────────────────────── #}
+        {% if i.reply_set.all %}
+            <details open>
+                <summary>Replies ({{ i.reply_set.all|length }})</summary>
+                <div class="replies">
+                    {% for reply in i.reply_set.all %}
+                        <div class="reply" id="r{{reply.id}}">{% include "_postcontainer.html" with obj=reply replyreply=True %}</div>
                     {% endfor %}
                 </div>
-                <div class="content">
-                    {{reply.content}}
-                </div>
-            </div>
-        {% endfor %}
-        {%endif%}
-        
-	<!-- </div> -->
-</div>
-    <div class="postform post replyform">
-    <details open>
-        <summary>reply</summary>
-        <form action="/submitreply/{{i.id}}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <textarea name="content" placeholder="Treść posta..."></textarea>
-            <input type="hidden" name="section_id" value="{{ section.id }}">
-            <input type="file" name="file" accept="image/*" multiple>
-            <input type="file" id="r-input2" name="file2" accept="image/*" style="display: none;">
-            
-            <div style="display: flex; align-items: flex-start; margin-top: 10px; max-width: 700px; width: 100%;">
-                <div class="wrap" style="position: relative; display: inline-block; max-width: fit-content; margin-right: 50px;">
-                    <img id="r-img" src="#" alt="Podgląd"
-                        style="display: none; width: 100%; height: 150px; object-fit: cover; border: 2px solid #d4a017;">
-                    <button type="button" class="x-btn" id="r-del"
-                        style="display: none; position: absolute; top: 5px; right: 5px; background-color: rgba(0, 0, 0, 0.6); 
-                        color: white; border: none; border-radius: 4px; width: 24px; height: 24px; font-size: 14px; cursor: pointer;
-                         z-index: 999; margin: 0; padding: 0; display: none; align-items: center; justify-content: center;">&times;</button>
-                    
-                </div>
-                <div class="wrap" id="wrap2" style="position: relative; display: none; max-width: fit-content; margin-right: 50px;">
-                    <img id="r-img2" src="#" alt="Podgląd"
-                        style="display: none; width: 100%; height: 150px; object-fit: cover; border: 2px solid #d4a017;">
-                    <button type="button" class="x-btn" id="r-del2"
-                        style="display: none; position: absolute; top: 5px; right: 5px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 4px; width: 24px; height: 24px; font-size: 14px; cursor: pointer; z-index: 999; margin: 0; padding: 0; align-items: center; justify-content: center;">&times;</button>
-                </div>
-                <div class="wrap" id="wrap3" style="position: relative; display: none; max-width: fit-content; margin-right: 50px;">
-                    <img id="r-img3" src="#" alt="Podgląd"
-                        style="display: none; width: 100%; height: 150px; object-fit: cover; border: 2px solid #d4a017;">
-                    <button type="button" class="x-btn" id="r-del3"
-                        style="display: none; position: absolute; top: 5px; right: 5px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 4px; width: 24px; height: 24px; font-size: 14px; cursor: pointer; z-index: 999; margin: 0; padding: 0; align-items: center; justify-content: center;">&times;</button>
-                </div>
-                
-                <input type="file" id="r-input3" name="file3" accept="image/*" style="display: none;">
-                
-                <button type="button" id="plusik" style="display: none; background-color: #2b3a42; color: #ffffff; border: none; border-radius: 4px;
-                 width: 32px; height: 32px; font-size: 20px; font-weight: bold;
-                 cursor: pointer; align-self: center; margin-left: -32px; padding: 0; line-height: 32px; box-shadow: none; outline: none;">+</button>
-                <div id="image-modal"
-                    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); z-index: 9999; justify-content: center; align-items: center; cursor: pointer;">
-                    <img id="modal-img" src="" alt="Powiększenie"
-                        style="max-width: 90%; max-height: 90%; object-fit: contain; border: 2px solid #ffffff; border-radius: 4px;">
-                </div>
-            </div>
-            <button type="submit">Dodaj</button>
+            </details>
+        {% endif %}
 
-            </form>
-    </details>
-    </div>
-
-<script style="display: none;">
-(function () {
-    const form = document.querySelector('.postform');
-
-    // Pierwszy boks
-    const input = form.querySelector('input[name="file"]');
-    const img = form.querySelector('#r-img');
-    const del = form.querySelector('#r-del');
-    const plus = document.querySelector('#plusik');
-
-    // Drugi boks
-    const input2 = form.querySelector('#r-input2');
-    const wrap2 = form.querySelector('#wrap2');
-    const img2 = form.querySelector('#r-img2');
-    const del2 = form.querySelector('#r-del2');
-
-    // Trzeci boks
-    const input3 = form.querySelector('#r-input3');
-    const wrap3 = form.querySelector('#wrap3');
-    const img3 = form.querySelector('#r-img3');
-    const del3 = form.querySelector('#r-del3');
-
-    // Powiekszenie (Modal)
-    const modal = document.querySelector('#image-modal');
-    const modalImg = document.querySelector('#modal-img');
-
-    const podglady = [
-        document.querySelector('#r-img'),
-        document.querySelector('#r-img2'),
-        document.querySelector('#r-img3')
-    ];
-    
-    podglady.forEach(obrazek => {
-        if (obrazek) {
-            obrazek.onclick = () => {
-                modalImg.src = obrazek.src;
-                modal.style.display = 'flex';
-            };
-        }
-    });
-
-    if (modal) {
-        modal.onclick = () => {
-            modal.style.display = 'none';
-            modalImg.src = '';
-        };
-    }
-
-    // Funkcja pomocnicza, która pilnuje widoczności plusika
-    const aktualizujPlusik = () => {
-        if (!plus) return;
-        if (input3 && input3.files.length > 0) {
-            plus.style.display = 'none';
-        } else if (input && input.files.length > 0) {
-            plus.style.display = 'block';
-        } else {
-            plus.style.display = 'none';
-        }
-    };
-
-    // PIERWSZE ZDJĘCIE
-    if (input && img && del) {
-        input.onchange = () => {
-            const files = input.files;
-            if (files && files.length > 0) {
-                img.src = URL.createObjectURL(files[0]);
-                img.style.display = 'inline-block';
-                del.style.display = 'flex';
-                aktualizujPlusik();
-            }
-        };
-
-        del.onclick = () => {
-            // Jeśli jest drugie zdjęcie -> przesuwamy je na pierwsze miejsce
-            if (input2 && input2.files.length > 0) {
-                const dt = new DataTransfer();
-                dt.items.add(input2.files[0]);
-                input.files = dt.files;
-                img.src = URL.createObjectURL(input.files[0]);
-                img.style.display = 'inline-block';
-                del.style.display = 'flex';
-
-                // Jeśli było też trzecie zdjęcie -> przesuwamy je na drugie miejsce
-                if (input3 && input3.files.length > 0) {
-                    const dt2 = new DataTransfer();
-                    dt2.items.add(input3.files[0]);
-                    input2.files = dt2.files;
-                    img2.src = URL.createObjectURL(input2.files[0]);
-                    img2.style.display = 'inline-block';
-                    del2.style.display = 'flex';
-
-                    // Czyszczenie trzeciego miejsca
-                    input3.value = '';
-                    img3.src = '#';
-                    img3.style.display = 'none';
-                    del3.style.display = 'none';
-                    if (wrap3) wrap3.style.display = 'none';
-                } else {
-                    // Brak trzeciego zdjęcia -> czyścimy drugie miejsce
-                    input2.value = '';
-                    img2.src = '#';
-                    img2.style.display = 'none';
-                    del2.style.display = 'none';
-                    if (wrap2) wrap2.style.display = 'none';
-                }
-            } else {
-                // Brak drugiego zdjęcia -> zwykłe czyszczenie pierwszego pola
-                input.value = '';
-                img.src = '#';
-                img.style.display = 'none';
-                del.style.display = 'none';
-            }
-            aktualizujPlusik();
-        };
-    }
-
-    // KLIKNIĘCIE W PLUSIK
-    if (plus) {
-        plus.onclick = () => {
-            if (input2 && input2.files.length === 0) {
-                if (wrap2) wrap2.style.display = 'inline-block';
-                input2.click();
-            } 
-            else if (input3 && input3.files.length === 0) {
-                if (wrap3) wrap3.style.display = 'inline-block';
-                input3.click();
-            }
-        };
-    }
-
-    // DRUGIE ZDJĘCIE
-    if (input2 && img2 && del2) {
-        input2.onchange = () => {
-            const files = input2.files;
-            if (files && files.length > 0) {
-                img2.src = URL.createObjectURL(files[0]);
-                img2.style.display = 'inline-block';
-                del2.style.display = 'flex';
-                aktualizujPlusik();
-            }
-        };
-
-        del2.onclick = () => {
-            // Jeśli jest trzecie zdjęcie -> przesuwamy je na drugie miejsce
-            if (input3 && input3.files.length > 0) {
-                const dt = new DataTransfer();
-                dt.items.add(input3.files[0]);
-                input2.files = dt.files;
-                img2.src = URL.createObjectURL(input2.files[0]);
-                img2.style.display = 'inline-block';
-                del2.style.display = 'flex';
-
-                // Czyszczenie trzeciego miejsca
-                input3.value = '';
-                img3.src = '#';
-                img3.style.display = 'none';
-                del3.style.display = 'none';
-                if (wrap3) wrap3.style.display = 'none';
-            } else {
-                // Brak trzeciego zdjęcia -> zwykłe czyszczenie drugiego pola
-                input2.value = '';
-                img2.src = '#';
-                img2.style.display = 'none';
-                del2.style.display = 'none';
-                if (wrap2) wrap2.style.display = 'none';
-            }
-            aktualizujPlusik();
-        };
-    }
-
-    // TRZECIE ZDJĘCIE
-    if (input3 && img3 && del3) {
-        input3.onchange = () => {
-            const files = input3.files;
-            if (files && files.length > 0) {
-                img3.src = URL.createObjectURL(files[0]);
-                img3.style.display = 'inline-block';
-                del3.style.display = 'flex';
-                aktualizujPlusik();
-            }
-        };
-
-        del3.onclick = () => {
-            input3.value = '';
-            img3.src = '#';
-            img3.style.display = 'none';
-            del3.style.display = 'none';
-            if (wrap3) wrap3.style.display = 'none';
-            aktualizujPlusik();
-        };
-    }
-})();
-</script>
-</details>
+        {# ── Formularz odpowiedzi ─────────────────────────────────────── #}
+        <div class="postform post replyform">
+            <details open>
+                <summary>Odpowiedz</summary>
+                <form id="reply-form-{{ i.id }}" action="/submitreply/{{ i.id }}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <textarea id="replytext" name="content" placeholder="Treść odpowiedzi..."></textarea>
+                    <input type="hidden" name="section_id" value="{{ section.id }}">
+                    <button type="submit">Wyślij</button>
+                </form>
+            </details>
+        </div>
     </div>
     {% endfor %}
 </div>
+<script src="/static/image_upload.js"></script>
+<script>
+    document.querySelectorAll('[id^="reply-form-"]').forEach(form => {
+        initImageUpload(form, { maxFiles: 3, maxSizeMB: 4 });
+    });
+</script>
 {% endblock %}
-
-
-
