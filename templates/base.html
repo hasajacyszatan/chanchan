@@ -28,75 +28,14 @@
 
     {% block content %}{% endblock %}
 
-    <script>
-        // Klik w miniaturę → przełącza na pełny rozmiar (używa data-fullpng)
-        function togglefav(postid, el) {
-            fetch("/post/"+postid+"/favourite/")
-            el.innerText = "dodano do fav"
-        }
-        document.addEventListener('click', e => {
-            const img = e.target.closest('.images img');
-            if (!img) return;
-
-            if (img.dataset.expanded) {
-                // Wróć do miniatury
-                img.src = img.dataset.thumbnailSrc;
-                img.style.cssText = '';
-                delete img.dataset.expanded;
-            } else {
-                // Pokaż pełne zdjęcie
-                img.dataset.thumbnailSrc = img.src;
-                img.src = img.dataset.fullpng || img.src;
-                img.style.cssText = 'max-height:500px;max-width:500px;width:auto;height:auto;flex-basis:100%;cursor:zoom-out;';
-                img.dataset.expanded = '1';
-            }
-        });
-    </script>
-
 <div style="text-align: center; margin-top: 30px; font-family: monospace;">
     <a href="/" style="color: #268bd2; text-decoration: none;">[ Strona Główna ]</a>
 </div>
-<script src="/static/js/replysupporter.js"></script>
 
-<button id="scrollToTopBtn" title="Wróć na górę" style="
-    display: none; 
-    position: fixed; 
-    bottom: 30px; 
-    right: 30px; 
-    z-index: 9999; 
-    font-size: 16px; 
-    font-family: monospace;
-    border: none; 
-    outline: none; 
-    background-color: #268bd2; 
-    color: white; 
-    cursor: pointer; 
-    padding: 10px 15px; 
-    border-radius: 5px;
-    opacity: 0.8;
-">
+<button id="scrollToTopBtn" title="Wróć na górę">
     ▲ W górę
 </button>
-
-<script>
-    const topBtn = document.getElementById("scrollToTopBtn");
-
-   
-    window.onscroll = function() {
-               if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 300) {
-            topBtn.style.display = "block";
-        } else {
-            topBtn.style.display = "none";
-        }
-    };
-
-    
-    topBtn.addEventListener("click", function() {
-        window.scrollTo({
-            top: 0, 
-            behavior: "smooth" 
-        });
-    });
-</script>
+<script src="/static/js/misc_scripts.js"></script>
+<script src="/static/js/replysupporter.js"></script>
 </body>
 </html>
