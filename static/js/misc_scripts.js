@@ -22,8 +22,17 @@ topBtn.addEventListener("click", function() {
 
 // Klik w miniaturę → przełącza na pełny rozmiar (używa data-fullpng)
 function togglefav(postid, el) {
-    fetch("/post/"+postid+"/favourite/")
-    el.innerText = "dodano do fav"
+    fetch("/post/" + postid + "/favourite/")
+        .then(() => {
+            const faved = el.dataset.faved === "true";
+            if (faved) {
+                el.dataset.faved = "false";
+                el.innerText = "☆ Dodaj do ulubionych";
+            } else {
+                el.dataset.faved = "true";
+                el.innerText = "★ Usuń z ulubionych";
+            }
+        });
 }
 document.addEventListener('click', e => {
     const img = e.target.closest('.images img');
