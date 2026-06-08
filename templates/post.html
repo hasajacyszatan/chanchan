@@ -5,8 +5,7 @@
     {% for i in posts %}
     <div class="post">
         {# ── Główny post ──────────────────────────────────────────────── #}
-        {% include "_postcontainer.html" with obj=i show_title=True show_meta=True %}
-
+        {% include "_postcontainer.html" with obj=i show_title=True show_user=True show_meta=True show_reply_link=True %}
         {# ── Odpowiedzi ───────────────────────────────────────────────── #}
         {% if i.reply_set.all %}
             <details open>

@@ -1,6 +1,10 @@
 .replyform{
     margin: 0px !important;
 }
+.headerinfo a{
+    text-decoration: none;
+    color: gray;
+}
 header, footer {
     background-color: #073642;
     width: 100%;

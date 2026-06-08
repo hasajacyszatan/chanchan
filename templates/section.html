@@ -2,10 +2,12 @@
 {% block title %}{{ section.name }}{% endblock %}
 {% block header %}
     <div class="headerinfo">
+        <a href="/">
         {% if section.image_path %}
         <div><img src="{{ section.image_path }}"></div>
         {% endif %}
         <span>{{ section.description }}</span>
+        </a>
     </div>
 {% endblock %}
 {% block content %}
