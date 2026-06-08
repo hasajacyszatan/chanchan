@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Profil: {{ profile_user.username }}{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+    <div class="profile-card">
+        <div class="profile-avatar-wrap">
+            {% if profile.avatar_path %}
+            <img class="profile-avatar" src="{{ profile.avatar_path}}" alt="Avatar">
+            <div class="profile-avatar-placeholder">
+                {{ profile_user.username|first|upper }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="profile-bio">
+            {% if profile.bio %}
+            {{ profile.bio|linebreaksbr }}
+            {% else %}
+            <span class="profile-bio-empty">Użytkownik nie dodał jeszcze opisu.</span>
+            {% endif %}
+        </div>
+        <div class="profile-meta">
+            <span>Dołączył: {{ profile_user.date_joined|date:"d.m.Y" }}</span>
+            <span class="meta-sep">·</span>
+            <span>Posty: {{ user_posts.count }}</span>
+        </div>
+        
+        {% if request.user == profile_user %}
+            <a href="{%url 'edit_profile' %}" class="profile-edit-btn">[ Edytuj profil ]</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="profile-posts-section">
+    <h3 class="profile-posts-title">Posty użytkownika</h3>
+    {% if user_posts %}
+        {% for p in user_posts %}
+        <div class="post">
+                {% include "_postcontainer.html" with obj=p show_reply_link=True %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="profile-no-posts">Użytkownik nie dodał żadnych postów.</p>
+    {% endif %}
+</div>
+{% endblock %}

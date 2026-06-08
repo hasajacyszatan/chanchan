@@ -15,6 +15,7 @@
 	<div class="navauth">
 	{% if request.user.is_authenticated %}
         Witaj, {{ request.user.username }}!
+			  [ <a href="{% url 'user_profile' username=request.user.username %}">Mój profil</a> ]
 			  [ <a href="{% url 'favourite_list' %}">★ Moje Ulubione </a> ]
         [ <a href="/accounts/logout">Wyloguj</a> ]
     {% else %} 

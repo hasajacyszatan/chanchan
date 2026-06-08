@@ -7,7 +7,15 @@
     <div class="content">
         <b class="title">
             {{ obj.title }}
-            <span class="user">{{ obj.user }}</span>
+            <span class="user">
+                {% if obj.user %}
+                <a href="/user/{{ obj.user.username }}/" style="color: inherit; text-decoration: none;">
+                    {{ obj.user }}
+                </a>
+                {% else %}
+                    Anon
+                {% endif %}
+            </span>
         </b>
         <b class="created_at">
             {%if replyreply%}

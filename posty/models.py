@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 class Section(models.Model):
     image_path = models.CharField(max_length=500, null=True, blank=True)
@@ -38,3 +40,16 @@ class Image(models.Model):
     image_path = models.CharField(max_length=500)
     thumbnail_image_path = models.CharField(max_length=500)
     
+
+class UserProfile(models.Model):
+    user    = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    bio     = models.TextField(max_length=500, blank=True, default='')
+    avatar_path     = models.CharField(max_length=500, blank=True, default='')
+
+    def __str__(self):
+        return f"Profil użytkownika {self.user.username}"
+    
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.get_or_create(user=instance)

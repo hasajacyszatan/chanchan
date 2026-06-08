@@ -20,5 +20,7 @@ urlpatterns = [
     path('api/reply', apiviews.reply),
     path('api/image/<int:imageid>', apiviews.image),
     path('regulamin/', regulamin, name='regulamin'),
-    path('tworcy/', TemplateView.as_view(template_name='tworcy.html'), name='tworcy')
+    path('tworcy/', TemplateView.as_view(template_name='tworcy.html'), name='tworcy'),
+    path('user/<str:username>/',    profile_view, name='user_profile'),
+    path('profile/edit/',   edit_profile, name='edit_profile'),
 ]
