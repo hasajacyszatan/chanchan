@@ -191,32 +191,28 @@ def edit_profile(request):
         if 'avatar' in request.FILES:
             uploaded = request.FILES['avatar']
             if uploaded.size > 4 * 1024 * 1024:
-                return render(request, 'edit_profile.html', {
-                    'profile': profile,
-                    'error':    'Plik jest za duży (max 4MB).',
+                return render(request, 'edit_profile.html', { 'profile': profile,  'error':    'Plik jest za duży (max 4MB).',
                 })
             try:
                 filename = str(uuid.uuid4())
                 img = PILImage.open(uploaded)
                 if img.mode not in ("RGB", "L"):
                     img = img.convert("RGB")
-                    w, h = img.size
-                    min_dim = min(w, h)
-                    img = img.crop(((w - min_dim) // 2, (h - min_dim) // 2,
-                                    (w + min_dim) // 2, (h + min_dim) // 2))
-                    img = img.resize((200, 200), PILImage.LANCZOS)
-                    avatar_dir = "static/images/avatars"
-                    os.makedirs(avatar_dir, exist_ok=True)
-                    path = f"{avatar_dir}/{filename}.png"
-                    img.save(path)
-                    profile.avatar_path = "/" + path
+                w, h = img.size
+                min_dim = min(w, h)
+                img = img.crop(((w - min_dim) // 2, (h - min_dim) // 2,
+                                   (w + min_dim) // 2, (h + min_dim) // 2))
+                img = img.resize((200, 200), PILImage.LANCZOS)
+                avatar_dir = "static/images/avatars"
+                os.makedirs(avatar_dir, exist_ok=True)
+                path = f"{avatar_dir}/{filename}.png"
+                img.save(path)
+                profile.avatar_path = "/" + path
             except Exception as e:
-                return render(request, 'edit_profile.html', {
-                    'profile': profile,
-                    'error': f'Błąd przetwarzania obrazu: {e}',
+                return render(request, 'edit_profile.html', {'profile': profile,'error': f'Błąd przetwarzania obrazu: {e}',
                 })
             
-            profile.save()
-            return redirect('user_profile', username=request.user.username)
+        profile.save()
+        return redirect('user_profile', username=request.user.username)
         
-        return render(request, 'edit_profile.html', {'profile': profile})
+    return render(request, 'edit_profile.html', {'profile': profile})

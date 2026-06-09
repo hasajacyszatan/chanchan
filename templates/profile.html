@@ -8,6 +8,7 @@
         <div class="profile-avatar-wrap">
             {% if profile.avatar_path %}
             <img class="profile-avatar" src="{{ profile.avatar_path}}" alt="Avatar">
+            {% else %}
             <div class="profile-avatar-placeholder">
                 {{ profile_user.username|first|upper }}
             </div>

@@ -15,14 +15,22 @@
 
     <div class="boards-box" style="margin-top: 50px;">
         <div class="boards-header">
-            Twoje Zapisane Posty (★)
+            Twoje Ulubione Posty (★)
         </div>
         
         <div class="boards-content" style="display: block; padding: 20px;">
             {% if posts %}
                 {% for post in posts %}
-                    <div class="post">
-                    {% include "_postcontainer.html" with obj=post replyreply=True %}
+                <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 18px;"></div>
+                    <div class="post" style="flex: 1;">
+                         {% include "_postcontainer.html" with obj=post replyreply=True %}
+                    </div>
+                        <form method="POST" action="{% url 'toggle_favourite' post.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="fav-remove-btn">[ ★ Usuń z ulubionych ]</button>
+                    </form>
+
+                   
                     </div>
                 {% endfor %}
             {% else %}
@@ -30,6 +38,22 @@
             {% endif %}
         </div>
     </div>
-
+    <style>
+        .fav-remove-btn {
+            background: transparent !important;
+            color: #2aa198 !important;
+            border: 1px solid #2aa198 !important;
+            padding: 2px 7px !important;
+            font-family: monospace !important;
+            font-size: 0.72em !important;
+            cursor: pointer !important;
+            transition: background 0.15s, color 0.15s;
+            margin-top: 4px !important;
+        }
+        .fav-remove-btn:hover{
+            background: #2aa198 !important;
+            color: #002b36 !important;
+        }
+    </style>
 </body>
 </html>

@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+<!-- tutaj zapisuje sobie przypominajke o rozdzieleniu plików na osobne (jest 1:30 leave me alone X_X)-->
+{% block title %}Edytuj profil{% endblock %}
+
+{%block content %}
+<div class="ep-page">
+    <h2 class="ep-title">[ Edytuj profil ]</h2>
+
+    {% if error %}
+    <div class="ep-error">{{ error }}</div>
+    {% endif %}
+    
+    <div class="ep-card">
+        <div class="ep-avatar-section">
+            {% if profile.avatar_path %}
+                <img class="ep-avatar-preview" src="{{ profile.avatar_path }}" id="avatarPreview" alt="Avatar">
+            {% else %}
+            <div class="ep-avatar-placeholder" id="avatarPreview">
+                {{ request.user.username|first|upper }}
+            </div>
+        {% endif %}
+        <p class="ep-avatar-label">Twoje zdjęcie profilowe</p>
+        </div>
+        
+        <form method="POST" enctype="multipart/form-data" class="ep-form">
+            {% csrf_token %}
+
+            <div class="ep-field">
+                <label class="ep-label">
+                    Zmień zdjęcie profilowe
+                    <span class="ep-hint">(JPG/ PNG, max 4MB)</span>
+                </label>
+                <label class="ep-file-btn" for="avatarInput">
+                    [ Wybierz plik ]
+                    <input type="file" name="avatar" id="avatarInput"
+                        accept="image/jpeg,image/png,image/webp" style="display:none;">
+                </label>
+                <span class="ep-filename" id="filenameLabel">Nie wybrano pliku</span>
+            </div>
+
+            <div class="ep-field">
+                <label class="ep-label" for="bioInput">
+                    Opis <span class="ep-hint">(max 500 znaków)</span>
+                </label>
+                <textarea name="bio" id="bioInput" class="ep-textarea"
+                maxlength="500"
+                placeholder="Wpisz opis...">{{ profile.bio }}</textarea>
+            <div class="ep-charcount">
+                <span id="charCount">{{ profile.bio|length }} </span>/500
+                </div>
+            </div>
+
+            <div class="ep-actions">
+                <button type="submit" class="ep-btn-save">[ Zapisz zmiany ]</button>
+                <a href="{% url 'user_profile' username=request.user.username %}"
+                    class="ep-btn-cancel">[ Anuluj ]</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- tu będzie styl a potem skrypt bo mi się nie chce tworzyć dodatkowych plików X_X -->
+
+<style>
+.ep-page {
+    max-width: 580px;
+    margin: 28px auto;
+    padding: 0 12px;
+    font-family: monospace;
+}
+.ep-title {
+    color: #dc322f;
+    text-align: center;
+    margin-bottom: 24px;
+}
+.ep-error {
+    border: 1px solid #dc322f;
+    color: #dc322f;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    background-color: rgba(220,50,47,.08);
+}
+.ep-card {
+    border: 1px solid #586e75;
+    padding: 28px;
+    background: #073642;
+}
+.ep-avatar-section {
+    text-align: center;
+    margin-bottom: 28px;
+}
+.ep-avatar-preview {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #268bd2;
+    display: inline-block;
+}
+.ep-avatar-placeholder {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #002b36;
+    border: 2px dashed #586e75;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    font-weight: bold;
+    color: #586e75;
+}
+.ep-avatar-label {
+    color: #586e75;
+    font-size: .78em;
+    margin: 8px 0 0;
+}
+.ep-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+.ep-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.ep-label {
+    color: #93a1a1;
+    font-size: .9em;
+}
+.ep-hint {
+    color: #586e75;
+    font-size: .8em;
+    margin-left: 6px;
+}
+.ep-file-btn {
+    display: inline-block;
+    color: #839496;
+    border: 1px solid #586e75;
+    padding: 5px 12px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: border-color .15s, color .15s;
+}
+.ep-file-btn:hover {
+    border-color: #268bd2;
+}
+.ep-filename {
+    color: #586e75;
+    font-size: .8em;
+    font-style: italic;
+}
+.ep-textarea {
+    background: #002b36;
+    color: #839496;
+    border: 1px solid #586e75;
+    padding: 10px 12px;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 130px;
+    resize: vertical;
+    outline: none;
+    transition: border-color .15s;
+}
+.ep-textarea:focus {
+    border-color: #268bd2;
+}
+.ep-charcount {
+    color: #586e75;
+    font-size: .78em;
+    text-align: right;
+}
+.ep-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.ep-btn-save {
+    background: transparent;
+    color: #268bd2;
+    border: 1px solid #268bd2;
+    padding: 6px 18px;
+    font-family: monospace;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+.ep-btn-save:hover {
+    background: #268bd2;
+    color: #002b36;
+}
+.ep-btn-cancel {
+    color: #586e75;
+    text-decoration: none;
+}
+.ep-btn-cancel:hover {
+    color: #839496;
+}
+</style>
+<script>
+    const fileInput     = document.getElementById('avatarInput');
+    const filenameLabel = document.getElementById('filenameLabel');
+
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        filenameLabel.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = e => {
+            const prev = document.getElementById('avatarPreview');
+            if (prev.tagName === 'IMG') {
+                prev.src = e.target.result
+                } else {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'ep-avatar-preview';
+                    img.id = 'avatarPreview';
+                    prev.replaceWith(img);
+                }
+        };
+        reader.readAsDataURL(file);
+    });
+
+    const bioInput = document.getElementById('bioInput');
+    const charCount = document.getElementById('charCount');
+    bioInput.addEventListener('input', () => {
+        charCount.textContent = bioInput.value.length;
+    });
+</script>
+{% endblock %}
