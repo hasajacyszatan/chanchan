@@ -1,4 +1,3 @@
-<!-- {% include "base.html"%} -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +7,9 @@
     <link rel="stylesheet" href="/static/indexstyle.css">
 </head>
 <body>
-
     <div class="top-auth-bar">
         [ <a href="/">Powrót do głównej</a> ]
     </div>
-
     <div class="boards-box" style="margin-top: 50px;">
         <div class="boards-header">
             Twoje Ulubione Posty (★)
@@ -21,39 +18,25 @@
         <div class="boards-content" style="display: block; padding: 20px;">
             {% if posts %}
                 {% for post in posts %}
-                <div style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 18px;"></div>
-                    <div class="post" style="flex: 1;">
-                         {% include "_postcontainer.html" with obj=post replyreply=True %}
+                <div style="display: flex; align-items: stretch; gap: 4px; margin-bottom: 10px;">
+                    <div class="post" style="margin: 0;">
+                        {% include "_postcontainer.html" with obj=post replyreply=True %}
                     </div>
-                        <form method="POST" action="{% url 'toggle_favourite' post.id %}">
+                    <form method="POST" action="{% url 'toggle_favourite' post.id %}" 
+                          style="flex: 0 0 120px; display: flex; margin: 0; padding: 0;">
                         {% csrf_token %}
-                        <button type="submit" class="fav-remove-btn">[ ★ Usuń z ulubionych ]</button>
+                        <button type="submit" class="fav-remove-btn">
+                            <span style="font-size: 50px;">★</span>
+                            <br>
+                            Usuń z ulubionych
+                        </button>
                     </form>
-
-                   
-                    </div>
+                </div>
                 {% endfor %}
             {% else %}
                 <p style="color: #93a1a1;">Nie masz jeszcze żadnych ulubionych postów.</p>
             {% endif %}
         </div>
     </div>
-    <style>
-        .fav-remove-btn {
-            background: transparent !important;
-            color: #2aa198 !important;
-            border: 1px solid #2aa198 !important;
-            padding: 2px 7px !important;
-            font-family: monospace !important;
-            font-size: 0.72em !important;
-            cursor: pointer !important;
-            transition: background 0.15s, color 0.15s;
-            margin-top: 4px !important;
-        }
-        .fav-remove-btn:hover{
-            background: #2aa198 !important;
-            color: #002b36 !important;
-        }
-    </style>
 </body>
 </html>

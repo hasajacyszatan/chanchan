@@ -40,19 +40,25 @@
 <button id="themeToggle">[ 💡 Jasny motyw ]</button>
 <script>
     
+    // sprawdzanie motywu z llocalstorage aby było pernamentne
+
+    let currentstate = localStorage.getItem("lightdarktheme")
     const themeBtn = document.getElementById('themeToggle');
-    
+
+    if (localStorage.getItem("lightdarktheme") === 'light') {
+        console.log("ciemny")
+        document.body.classList.add('light-theme');
+        themeBtn.innerText = '[ 💡 Jasny motyw ]';
+    } else {
+        themeBtn.innerText = '[ 🌙 Ciemny motyw ]';
+    }
+
     themeBtn.addEventListener('click', () => {
-        
         document.body.classList.toggle('light-theme');
-        
-        
-        if(document.body.classList.contains('light-theme')) {
-            themeBtn.innerText = '[ 🌙 Ciemny motyw ]';
-        } else {
-            themeBtn.innerText = '[ 💡 Jasny motyw ]';
-        }
-    });
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem("lightdarktheme", isLight ? 'light' : 'dark');
+        themeBtn.innerText = isLight ? '[ 💡 Jasny motyw ]' : '[ 🌙 Ciemny motyw ]';
+});
 </script>
 </body>
 </html>
