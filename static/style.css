@@ -147,7 +147,7 @@ details[open] > summary::before {
     outline: none;
 }
 
-.posts {
+.posts,  .profile-posts-section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -237,3 +237,43 @@ footer a{
     border-radius: 5px;
     opacity: 0.8;
 }
+.profile-posts-section{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+    #themeToggle {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: transparent;
+        color: #268bd2;
+        border: 1px solid #268bd2;
+        padding: 5px 10px;
+        font-family: monospace;
+        cursor: pointer;
+        z-index: 999;
+    }
+    #themeToggle:hover {
+        background: #268bd2;
+        color: #ffffff;
+    }
+
+    body.light-theme {
+        background-color: #8bb2d9 !important;
+        color: #002b36 !important;
+    }
+    body.light-theme a {
+        color: #004080 !important;
+    }
+    
+    body.light-theme div, 
+    body.light-theme span, 
+    body.light-theme p, 
+    body.light-theme .ep-card, 
+    body.light-theme .post-card {
+        background-color: #a3c6e8 !important;
+        border-color: #6a95bd !important;
+        color: #002b36 !important;
+    }

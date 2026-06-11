@@ -30,12 +30,14 @@
 		<div class ="boardsbox">
 			<div class="boardsboxheader">
 				<h2>Dostępne Boardy: </h2>
+				<hr>
+
 			</div>
 		<div class ="boardscontent">
 		{%for i in sections%}
 			<div class="board">
-				<a href="/section/{{i.name}}">
 			<span class="boardname">{{i.name}}</span>
+				<a href="/section/{{i.name}}">
 			<span class="boardseparator">-</span>
 			<span class="boarddesc"> {{i.description}}</span>
 			 	</a>
@@ -45,12 +47,12 @@
 	</div>
 </div>
     </div>
-<div style="text-align: center; margin-top: 30px; font-family: monospace;">
-    <a href="/regulamin/" style="color: #268bd2; text-decoration: none;">[ Regulamin UkenChana ]</a>
+<div id="regulamin">
+    <a href="/regulamin/">[ Regulamin UkenChana ]</a>
 </div>
 
-<div style="text-align: center; margin-top: 120px; padding-bottom: 20px; font-family: monospace; font-size: 12px; opacity: 0.6;">
-    <a href="/tworcy/" style="color: #268bd2; text-decoration: none;">[ Twórcy Projektu ]</a>
+ <div id="tworcy">
+    <a href="/tworcy/">[ Twórcy Projektu ]</a>
 </div>
 </body>
 </html>
