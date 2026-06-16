@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+  <div style="display: flex; flex-direction: column; gap: 0.5rem;">
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
 
     <button type="submit">Zaloguj</button>
 </form>
+  </div>
+</div>
 
 {% endblock %}
