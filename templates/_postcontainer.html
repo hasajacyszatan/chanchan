@@ -17,21 +17,31 @@
                 {% endif %}
             </span>
         </b>
-        <b class="created_at">
-            {%if replyreply%}
+<b class="created_at">
+            {% if replyreply %}
                 <a href="#" onclick="replytoreply({{obj.id}})">Reply</a>
-            {%endif%}
-            {% if show_reply_link %}<a href="/post/{{ obj.id }}">Reply</a>
-            {% if request.user.is_authenticated %}
-{% if request.user in obj.favourites.all %}
-<a href="#" onclick="togglefav({{obj.id}}, this)" data-faved="true">★ Usuń z ulubionych</a>
-{% else %}
-<a href="#" onclick="togglefav({{obj.id}}, this)" data-faved="false">☆ Dodaj do ulubionych</a>
-{% endif %}
             {% endif %}
+            {% if show_reply_link %}<a href="/post/{{ obj.id }}">Reply</a>
+                {% if request.user.is_authenticated %}
+                    {% if request.user in obj.favourites.all %}
+                        <a href="#" onclick="togglefav({{obj.id}}, this)" data-faved="true">★ Usuń z ulubionych</a>
+                    {% else %}
+                        <a href="#" onclick="togglefav({{obj.id}}, this)" data-faved="false">☆ Dodaj do ulubionych</a>
+                    {% endif %}
+                {% endif %}
             {% endif %}
             id: {{ obj.id }}
             {{ obj.created_at }}
+
+{% if obj.reply_to %}
+                {% if obj.user == request.user or request.user.is_staff or obj.reply_to.user == request.user %}
+                    [ <a href="{% url 'delete_reply' obj.id %}" style="color: #dc322f; text-decoration: none;">Usuń</a> ]
+                {% endif %}
+            {% else %}
+                {% if obj.user == request.user or request.user.is_staff %}
+                    [ <a href="{% url 'delete_post' obj.id %}" style="color: #dc322f; text-decoration: none;">Usuń wątek</a> ]
+                {% endif %}
+            {% endif %}
         </b>
         <hr>
         <div class="postcontent">{{ obj.content }}</div>

@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
-from .models import Post
+from .models import Post, Reply
 
 @login_required
 def toggle_favourite(request, post_id):
@@ -17,8 +17,6 @@ def toggle_favourite(request, post_id):
 def favourite_list(request):
     fav_posts = request.user.favourite_posts.all()
     return render(request, 'favourites.html', {'posts': fav_posts})
-
-# Create your views here.
 
 def regulamin(request):
     return render(request, 'regulamin.html')

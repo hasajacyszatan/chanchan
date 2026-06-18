@@ -17,7 +17,11 @@
         Witaj, {{ request.user.username }}!
 			  [ <a href="{% url 'user_profile' username=request.user.username %}">Mój profil</a> ]
 			  [ <a href="{% url 'favourite_list' %}">★ Moje Ulubione </a> ]
-        [ <a href="/accounts/logout">Wyloguj</a> ]
+        
+        <form action="/accounts/logout/" method="POST" style="display: inline;">
+            {% csrf_token %}
+            [ <button type="submit" style="background: none; border: none; color: #268bd2; font-family: monospace; cursor: pointer; padding: 0; font-size: inherit;">Wyloguj</button> ]
+        </form>
     {% else %} 
 			<a href="/accounts/login">[Logowanie]</a>
 		<a href="/accounts/register">[Rejestracja]</a>

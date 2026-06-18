@@ -216,3 +216,23 @@ def edit_profile(request):
         return redirect('user_profile', username=request.user.username)
         
     return render(request, 'edit_profile.html', {'profile': profile})
+
+@login_required
+def delete_reply(request, reply_id):
+    reply = get_object_or_404(Reply, id=reply_id)
+    if reply.user == request.user or request.user.is_staff or reply.reply_to.user == request.user:
+        reply.delete()
+        
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    section_name = post.section.name
+    if post.user == request.user or request.user.is_staff:
+        post.delete()
+        referer = request.META.get('HTTP_REFERER', '')
+        if f'/post/{post_id}' in referer:
+            return redirect(f'/section/{section_name}')
+            
+    return redirect(request.META.get('HTTP_REFERER', '/'))
