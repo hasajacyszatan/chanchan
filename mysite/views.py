@@ -138,8 +138,8 @@ def submitreply(request, post_id):
 
     post    = get_object_or_404(Post, id=post_id)
     content = request.POST.get("content", "").strip()
-
-    newreply = Reply(content=content, reply_to=post)
+    user = request.user if request.user.is_authenticated else None
+    newreply = Reply(content=content, reply_to=post, user=user)
     newreply.save()
 
     err = _save_images_from_request(request, newreply, "reply")
