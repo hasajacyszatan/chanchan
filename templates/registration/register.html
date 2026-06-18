@@ -1,13 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
+
+<style>
+  form input {
+    padding: 5px;
+    background-color: darkslategrey;
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+  }
+  form input:focus{
+    outline: blue 3px solid;
+
+  }
+</style>
 <div style="max-width: 480px; margin: 40px auto; padding: 0 20px;">
 <h1>Rejestracja</h1>
 
 <form method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
 
-    <button type="submit">Zarejestruj</button>
+    <p>
+    {{ form.username.label_tag }}
+    {{ form.username }}
+    </p>
+    <p>
+    {{ form.password1.label_tag }}
+    {{ form.password1 }}
+    </p>
+    <p>
+    {{ form.password2.label_tag }}
+    {{ form.password2 }}
+    </p>
+        <details>
+        <summary>
+            Wymagania hasła
+        </summary>
+        {{ form.password1.help_text }}
+    </details>
+    <input type="submit" value="Zarejestruj się">
+    {% if form.errors %}
+        <div style="color:red">
+            {{ form.errors }}
+        </div>
+    {% endif %}
 </form>
 </div>
 {% endblock %}

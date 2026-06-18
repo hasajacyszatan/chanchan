@@ -1,8 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
+<style>
+  form input, form button {
+    padding: 5px;
+    background-color: darkslategrey;
+    color: white;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+  }
+  form input:focus{
+    outline: blue 3px solid;
+
+  }
+</style>
 <div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
   <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+  <h1>Logowanie</h1>
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
