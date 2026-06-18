@@ -60,5 +60,30 @@
         themeBtn.innerText = isLight ? '[ 💡 Jasny motyw ]' : '[ 🌙 Ciemny motyw ]';
 });
 </script>
+<div style="position: fixed; bottom: 70px; left: 20px; z-index: 999; display: flex; gap: 5px;">
+    <button id="btnTextNormal" style="background: #002b36; color: #268bd2; border: 1px solid #268bd2; cursor: pointer; padding: 5px 10px; font-weight: bold;">A</button>
+    <button id="btnTextLarge" style="background: #002b36; color: #268bd2; border: 1px solid #268bd2; cursor: pointer; padding: 5px 10px; font-weight: bold; font-size: 16px;">A+</button>
+</div>
+
+<style>
+    body.large-text,
+    body.large-text div,
+    body.large-text p,
+    body.large-text span,
+    body.large-text a {
+        font-size: 115% !important;
+        line-height: 1.6 !important;
+    }
+</style>
+
+<script>
+    document.getElementById('btnTextLarge').addEventListener('click', () => {
+        document.body.classList.add('large-text');
+    });
+    document.getElementById('btnTextNormal').addEventListener('click', () => {
+        document.body.classList.remove('large-text');
+    });
+</script>
 </body>
+
 </html>
