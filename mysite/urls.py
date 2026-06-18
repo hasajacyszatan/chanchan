@@ -5,6 +5,9 @@ from .views import *  # jeśli w tym samym katalogu
 from api import views as apiviews
 from posty.views import regulamin
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('', index),
     path('section/<str:dzial>', section),
@@ -26,4 +29,4 @@ urlpatterns = [
     path('profile/edit/',   edit_profile, name='edit_profile'),
     path('delete-reply/<int:reply_id>/', views.delete_reply, name='delete_reply'),
     path('delete-post/<int:post_id>/', views.delete_post, name='delete_post'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

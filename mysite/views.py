@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render as django_render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from PIL import Image as PILImage
 import math
 import uuid
@@ -21,7 +22,7 @@ def render(request, template_name, context=None):
 
 def save_uploaded_image(uploaded_file, related_obj, relation_type="post"):
     """
-    Zapisuje przesłany obraz (pełny + miniatura).
+    Zapisuje przesłany obraz (pełny + miniatura) do katalogu media/.
     Zwraca obiekt Image lub rzuca ValueError gdy plik za duży.
     """
     MAX_SIZE = 4 * 1024 * 1024
@@ -35,16 +36,23 @@ def save_uploaded_image(uploaded_file, related_obj, relation_type="post"):
     if img.mode not in ("RGB", "L"):
         img = img.convert("RGB")
 
-    full_path      = f"static/images/{filename}.png"
-    thumbnail_path = f"static/images/{filename}_thumbnail.png"
+    images_dir = os.path.join(settings.MEDIA_ROOT, "images")
+    os.makedirs(images_dir, exist_ok=True)
+
+    full_path      = os.path.join(images_dir, f"{filename}.png")
+    thumbnail_path = os.path.join(images_dir, f"{filename}_thumbnail.png")
 
     img.save(full_path)
     img.thumbnail((300, 300))
     img.save(thumbnail_path)
 
+    # Ścieżki URL względem MEDIA_URL (np. /media/images/uuid.png)
+    image_url     = settings.MEDIA_URL + f"images/{filename}.png"
+    thumbnail_url = settings.MEDIA_URL + f"images/{filename}_thumbnail.png"
+
     image_data = {
-        "image_path":           "/" + full_path,
-        "thumbnail_image_path": "/" + thumbnail_path,
+        "image_path":           image_url,
+        "thumbnail_image_path": thumbnail_url,
     }
     if relation_type == "post":
         image_data["post"] = related_obj
@@ -61,7 +69,6 @@ def _save_images_from_request(request, related_obj, relation_type="post"):
     Pobiera wszystkie pliki o nazwach file, file2, file3, … z request.FILES
     i zapisuje je. Zwraca HttpResponse z błędem albo None gdy OK.
     """
-    # Zbieramy pliki w kolejności: file, file2, file3, ...
     files = []
     for key in sorted(request.FILES.keys()):
         if key == 'file' or (key.startswith('file') and key[4:].isdigit()):
@@ -119,7 +126,6 @@ def submitpost(request):
     section_id = request.POST.get("section_id")
     section    = get_object_or_404(Section, id=section_id)
 
-    # Używamy request.user zamiast ufać danym z POST
     user = request.user if request.user.is_authenticated else None
 
     newpost = Post(title=title, content=content, section=section, user=user)
@@ -170,7 +176,8 @@ def favourite_list(request):
     return render(request, 'favourites.html', {'posts': fav_posts})
 
 
-# ── Profil użytkownika ────────────────────────────────────────────────────────────────────
+# ── Profil użytkownika ────────────────────────────────────────────────────────
+
 def profile_view(request, username):
     profile_user = get_object_or_404(User, username=username)
     profile, _ = UserProfile.objects.get_or_create(user=profile_user)
@@ -191,7 +198,9 @@ def edit_profile(request):
         if 'avatar' in request.FILES:
             uploaded = request.FILES['avatar']
             if uploaded.size > 4 * 1024 * 1024:
-                return render(request, 'edit_profile.html', { 'profile': profile,  'error':    'Plik jest za duży (max 4MB).',
+                return render(request, 'edit_profile.html', {
+                    'profile': profile,
+                    'error':   'Plik jest za duży (max 4MB).',
                 })
             try:
                 filename = str(uuid.uuid4())
@@ -203,18 +212,22 @@ def edit_profile(request):
                 img = img.crop(((w - min_dim) // 2, (h - min_dim) // 2,
                                    (w + min_dim) // 2, (h + min_dim) // 2))
                 img = img.resize((200, 200), PILImage.LANCZOS)
-                avatar_dir = "static/images/avatars"
+
+                avatar_dir = os.path.join(settings.MEDIA_ROOT, "images", "avatars")
                 os.makedirs(avatar_dir, exist_ok=True)
-                path = f"{avatar_dir}/{filename}.png"
+                path = os.path.join(avatar_dir, f"{filename}.png")
                 img.save(path)
-                profile.avatar_path = "/" + path
+
+                profile.avatar_path = settings.MEDIA_URL + f"images/avatars/{filename}.png"
             except Exception as e:
-                return render(request, 'edit_profile.html', {'profile': profile,'error': f'Błąd przetwarzania obrazu: {e}',
+                return render(request, 'edit_profile.html', {
+                    'profile': profile,
+                    'error': f'Błąd przetwarzania obrazu: {e}',
                 })
-            
+
         profile.save()
         return redirect('user_profile', username=request.user.username)
-        
+
     return render(request, 'edit_profile.html', {'profile': profile})
 
 @login_required
@@ -222,7 +235,7 @@ def delete_reply(request, reply_id):
     reply = get_object_or_404(Reply, id=reply_id)
     if reply.user == request.user or request.user.is_staff or reply.reply_to.user == request.user:
         reply.delete()
-        
+
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
@@ -234,5 +247,5 @@ def delete_post(request, post_id):
         referer = request.META.get('HTTP_REFERER', '')
         if f'/post/{post_id}' in referer:
             return redirect(f'/section/{section_name}')
-            
+
     return redirect(request.META.get('HTTP_REFERER', '/'))

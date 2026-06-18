@@ -6,8 +6,8 @@
 *.pot
 *.pyc
 __pycache__/
-static/secimages/*
-static/images/*
+media/secimages/*
+media/images/*
 mysite/__pycache__/
 local_settings.py
 db.sqlite3

@@ -1,4 +1,5 @@
-from django.http import JsonResponse, FileResponse
+from django.http import JsonResponse, FileResponse, Http404
+from django.conf import settings
 from posty.models import *
 import os
 
@@ -65,8 +66,23 @@ def reply(request):
     return JsonResponse(data, safe=False)
 
 def image(request, imageid):
-    image = Image.objects.get(id=imageid)
-    return FileResponse(
-        open(image.image_path[1:], "rb"),
-        as_attachment=True
-    )
+    try:
+        image = Image.objects.get(id=imageid)
+    except Image.DoesNotExist:
+        raise Http404("Obraz nie istnieje.")
+
+    # image_path to URL np. /media/images/uuid.png
+    # Zamieniamy URL na ścieżkę dyskową
+    relative = image.image_path.lstrip('/')           # media/images/uuid.png
+    if relative.startswith(settings.MEDIA_URL.lstrip('/')):
+        # Wytnij prefiks MEDIA_URL i sklej z MEDIA_ROOT
+        rel_to_media = relative[len(settings.MEDIA_URL.lstrip('/')):]
+        disk_path = os.path.join(settings.MEDIA_ROOT, rel_to_media)
+    else:
+        # Fallback — stara ścieżka zaczynająca się od static/
+        disk_path = relative
+
+    if not os.path.exists(disk_path):
+        raise Http404("Plik obrazu nie istnieje na dysku.")
+
+    return FileResponse(open(disk_path, "rb"), as_attachment=True)
