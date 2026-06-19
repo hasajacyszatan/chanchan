@@ -20,8 +20,8 @@
 <span class="created_at">
             <span>id: {{ obj.id }}</span>
             <span>{{ obj.created_at }}</span>
-            {% if reply %}
-                <a href="/post/{{ obj.reply_to.id }}#r{{ obj.id }}">Reply</a>
+            {% if replyreply %}
+                <a href="#" onclick="replytoreply({{obj.id}})">Reply</a>
             {% endif %}
             {% if show_reply_link %}<a href="/post/{{ obj.id }}">Reply</a>
                 {% if request.user.is_authenticated %}

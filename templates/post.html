@@ -12,7 +12,7 @@
                 <summary>Replies ({{ i.reply_set.all|length }})</summary>
                 <div class="replies">
                     {% for reply in i.reply_set.all %}
-                        <div class="reply" id="r{{reply.id}}">{% include "_postcontainer.html" with obj=reply replyreply=True  %}</div>
+                        <div class="reply" id="r{{reply.id}}">{% include "_postcontainer.html" with obj=reply replyreply=True %}</div>
                     {% endfor %}
                 </div>
             </details>

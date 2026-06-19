@@ -6,7 +6,7 @@
     color: gray;
 }
 header, footer {
-    background-color:#073641;
+    background-color: #073642;
     width: 100%;
     font-size: 14px;
     font-family: monospace;
@@ -14,16 +14,14 @@ header, footer {
     box-sizing: border-box;
 }
 header .menu{
-    padding: 6px 30px;
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #0c5162;
 }
 header .menu a {
     color: #2aa198;
     text-decoration: none;
-    font-size: 15px;
     font-weight: bold;
 }
 header .menu a:hover {
@@ -33,11 +31,10 @@ header .menu a:hover {
 body {
     color: #fdf6e3;
     font-family: "Trebuchet MS", sans-serif;
-    background-color: #002f3c;
+    background-color: #002b36;
     margin: 0;
     padding: 0;
 }
-
 
 .post, .postform {
     border: solid 2px #258bd2;
@@ -281,10 +278,4 @@ footer a{
         background-color: #a3c6e8 !important;
         border-color: #6a95bd !important;
         color: #002b36 !important;
-    }
-    body.light-theme header .menu {
-    background-color: #73a1cd !important;
-    }
-    body.light-theme header .menu .login {
-    background-color: #73a1cd !important;
     }
