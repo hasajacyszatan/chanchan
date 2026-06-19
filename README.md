@@ -54,7 +54,7 @@ python manage.py runserver
 
 Aplikacja będzie dostępna pod adresem `http://127.0.0.1:8000/`.
 
-## Panel administracyjny
+## Instrukcja użytkowania
 
 Aby korzystać z panelu Django Admin:
 
@@ -63,6 +63,9 @@ python manage.py createsuperuser
 ```
 
 Panel dostępny pod adresem `http://127.0.0.1:8000/admin/`.
+aby zacząć korzystać z naszego projektu należy utworzyć sekcje na stronie administratora
+później można się zarejestrować i zalogować jako użytkownik na `http://127.0.0.1:8000/accounts/register`
+następnie można dodać post, załączyć do niego zdjęcia, napisać do niego odpowiedź, dodać do ulubionych, lub go usunąć.
 
 ## API
 
